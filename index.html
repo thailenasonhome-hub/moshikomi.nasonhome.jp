@@ -105,6 +105,8 @@ th{background:#f8fafc;font-weight:600;color:#475569;white-space:nowrap}
 footer{text-align:center;padding:20px;color:#94a3b8;font-size:.8rem}
 @media(max-width:600px){.form-grid{grid-template-columns:1fr}.step-label{font-size:.58rem;max-width:60px}.card{padding:20px 14px}.type-btns{flex-direction:column;align-items:center}}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
 <header class="site-header">
@@ -439,8 +441,9 @@ footer{text-align:center;padding:20px;color:#94a3b8;font-size:.8rem}
 <select id="stSelect" style="width:100%;padding:8px;margin:6px 0;border-radius:7px;border:1px solid #d1d5db"><option value="new">Mới</option><option value="contacted">Đã LH</option><option value="closed">Đóng</option></select>
 <label><strong>Ghi chú:</strong></label>
 <textarea id="adNote" rows="2" style="width:100%;padding:8px;border-radius:7px;border:1px solid #d1d5db;margin:6px 0"></textarea>
-<div style="display:flex;gap:8px;margin-top:8px">
+<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
 <button class="btn-sm btn-view" style="padding:8px 18px" onclick="saveStatus()">Lưu</button>
+<button class="btn-sm btn-view" style="padding:8px 18px;background:#0f766e" onclick="downloadRegPDF()">📄 PDF</button>
 <button class="btn-sm" style="padding:8px 18px;background:#e2e8f0" onclick="closeModal()">Đóng</button>
 </div></div></div></div>
 
@@ -590,7 +593,226 @@ for(const i of fileIds){if(uploadedFilesStore['file'+i]){files['file'+i]=uploade
 if(document.getElementById('docTohon')?.checked) docs.push('tohon');
 if(document.getElementById('docKessan')?.checked) docs.push('kessan');return{id:Date.now(),created_at:new Date().toISOString(),status:'new',admin_note:'',applicantType:document.getElementById('applicantType').value,propertyCategory:document.getElementById('propertyCategory').value,propertyName:document.getElementById('propertyName').value,preferredArea:document.getElementById('preferredArea').value,layout:document.getElementById('layout').value,budgetMin:document.getElementById('budgetMin').value,budgetMax:document.getElementById('budgetMax').value,moveInDate:document.getElementById('moveInDate').value,contractPeriod:document.getElementById('contractPeriod').value,appName:document.getElementById('appName').value,appKana:document.getElementById('appKana').value,appBirth:document.getElementById('appBirth').value,appGender:document.getElementById('appGender').value,appNationality:document.getElementById('appNationality').value,appVisa:document.getElementById('appVisa').value,appVisaExpiry:document.getElementById('appVisaExpiry').value,appPhone:document.getElementById('appPhone').value,appLine:document.getElementById('appLine').value,appEmail:document.getElementById('appEmail').value,appAddress:document.getElementById('appAddress').value,appCompany:document.getElementById('appCompany').value,appJob:document.getElementById('appJob').value,appYears:document.getElementById('appYears').value,appIncome:document.getElementById('appIncome').value,appWorkPhone:document.getElementById('appWorkPhone').value,appWorkAddress:document.getElementById('appWorkAddress').value,corpName:document.getElementById('corpName').value,corpRep:document.getElementById('corpRep').value,corpNumber:document.getElementById('corpNumber').value,corpAddress:document.getElementById('corpAddress').value,numOccupants:document.getElementById('numOccupants').value,occupants:occ,hasPet:document.getElementById('hasPet').value,petInfo:document.getElementById('petInfo').value,smoking:document.getElementById('smoking').value,emgName:document.getElementById('emgName').value,emgKana:document.getElementById('emgKana').value,emgRelation:document.getElementById('emgRelation').value,emgPhone:document.getElementById('emgPhone').value,emgBirth:document.getElementById('emgBirth').value,emgEmail:document.getElementById('emgEmail').value,emgAddress:document.getElementById('emgAddress').value,guarantorType:document.querySelector('input[name="guarantorType"]:checked')?.value,guaName:document.getElementById('guaName').value,guaKana:document.getElementById('guaKana').value,guaRelation:document.getElementById('guaRelation').value,guaBirth:document.getElementById('guaBirth').value,guaPhone:document.getElementById('guaPhone').value,guaJob:document.getElementById('guaJob').value,guaIncome:document.getElementById('guaIncome').value,guaAddress:document.getElementById('guaAddress').value,guaCompanyName:document.getElementById('guaCompanyName').value,documents:docs,uploadedFiles:files,docNotes:document.getElementById('docNotes').value};}
 
-function submitForm(){const data=collectData();const list=getRegs();list.unshift(data);saveRegs(list);goStep(8);}
+
+async function generateApplicationPDF(data){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const pageW = doc.internal.pageSize.getWidth();
+  const margin = 14;
+  let y = 16;
+  const lineH = 6;
+  const maxW = pageW - margin * 2;
+
+  function ensureSpace(need){
+    if(y + need > 280){ doc.addPage(); y = 16; }
+  }
+  function section(title){
+    ensureSpace(12);
+    doc.setFillColor(13, 148, 136);
+    doc.rect(margin, y, maxW, 7, 'F');
+    doc.setTextColor(255,255,255);
+    doc.setFontSize(11);
+    doc.setFont(undefined, 'bold');
+    doc.text(title, margin + 2, y + 5);
+    doc.setTextColor(30,30,30);
+    doc.setFont(undefined, 'normal');
+    y += 10;
+  }
+  function field(label, value){
+    if(value === undefined || value === null || value === '') value = '-';
+    ensureSpace(lineH + 1);
+    doc.setFontSize(9);
+    doc.setFont(undefined, 'bold');
+    doc.setTextColor(80,80,80);
+    doc.text(String(label) + ':', margin, y);
+    doc.setFont(undefined, 'normal');
+    doc.setTextColor(20,20,20);
+    const lines = doc.splitTextToSize(String(value), maxW - 55);
+    doc.text(lines, margin + 52, y);
+    y += Math.max(lineH, lines.length * 4.5);
+  }
+  function smallNote(text){
+    ensureSpace(6);
+    doc.setFontSize(8);
+    doc.setTextColor(100,100,100);
+    doc.text(text, margin, y);
+    y += 5;
+  }
+
+  // Header
+  doc.setFillColor(15, 23, 42);
+  doc.rect(0, 0, pageW, 22, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(14);
+  doc.setFont(undefined, 'bold');
+  doc.text('NASON HOME', margin, 10);
+  doc.setFontSize(9);
+  doc.setFont(undefined, 'normal');
+  doc.text('賃貸借申込書 / Rental Application Form', margin, 16);
+  doc.setFontSize(8);
+  doc.text('ID: ' + String(data.id).slice(-8), pageW - margin, 10, { align: 'right' });
+  doc.text((data.created_at || '').replace('T', ' ').slice(0, 19), pageW - margin, 16, { align: 'right' });
+  y = 28;
+
+  // 1. Application
+  section('1. 賃貸借申込内容 / Application Details');
+  field('種別 Type', (data.applicantType === 'corp' ? '法人 Corporation' : '個人 Individual') + ' / ' + (data.propertyCategory === 'commercial' ? '店舗・事務所' : '住居'));
+  field('物件名 Property', data.propertyName);
+  field('希望エリア Area', data.preferredArea);
+  field('間取り Layout', data.layout);
+  field('家賃 Rent', '¥' + (data.budgetMin || 0) + ' 〜 ¥' + (data.budgetMax || 0));
+  field('入居希望日 Move-in', data.moveInDate);
+  field('契約期間 Period', data.contractPeriod);
+
+  // 2. Applicant
+  section('2. 申込者 / Applicant');
+  field('氏名 Name', (data.appName || '') + ' (' + (data.appKana || '') + ')');
+  field('生年月日 DOB', data.appBirth);
+  field('性別 Gender', data.appGender);
+  field('国籍 Nationality', data.appNationality);
+  field('在留資格 Visa', data.appVisa);
+  field('在留期限 Visa expiry', data.appVisaExpiry);
+  field('電話 Phone', data.appPhone);
+  field('LINE', data.appLine);
+  field('Email', data.appEmail);
+  field('現住所 Address', data.appAddress);
+  field('勤務先 Company', data.appCompany);
+  field('職種 Job', data.appJob);
+  field('勤続 Years', data.appYears);
+  field('月収 Income', data.appIncome ? ('¥' + data.appIncome) : '-');
+  field('勤務先電話', data.appWorkPhone);
+  field('勤務先住所', data.appWorkAddress);
+  if(data.applicantType === 'corp'){
+    field('法人名 Corp', data.corpName);
+    field('代表者 Rep', data.corpRep);
+    field('法人番号', data.corpNumber);
+    field('本店所在地', data.corpAddress);
+  }
+
+  // 3. Occupants
+  section('3. 入居者 / Occupants (' + (data.numOccupants || (data.occupants||[]).length) + ')');
+  (data.occupants || []).forEach(function(o, i){
+    field('入居者 ' + (i+1), (o.name||'') + ' / ' + (o.kana||'') + ' / ' + (o.rel||''));
+    field('  DOB / 国籍', (o.birth||'-') + ' / ' + (o.nat||'-'));
+    field('  電話 / 住所', (o.phone||'-') + ' / ' + (o.address||'-'));
+    field('  職業', o.job || '-');
+  });
+  field('ペット Pets', data.hasPet + (data.petInfo ? (' — ' + data.petInfo) : ''));
+  field('喫煙 Smoking', data.smoking);
+
+  // 4. Emergency
+  section('4. 緊急連絡先 / Emergency Contact');
+  field('氏名 Name', (data.emgName||'') + ' (' + (data.emgKana||'') + ')');
+  field('続柄 Relation', data.emgRelation);
+  field('生年月日 DOB', data.emgBirth);
+  field('電話 Phone', data.emgPhone);
+  field('Email', data.emgEmail);
+  field('住所 Address', data.emgAddress);
+
+  // 5. Guarantor
+  section('5. 連帯保証人 / Guarantor');
+  field('種類 Type', data.guarantorType);
+  if(data.guarantorType === 'personal'){
+    field('氏名', (data.guaName||'') + ' (' + (data.guaKana||'') + ')');
+    field('関係', data.guaRelation);
+    field('生年月日', data.guaBirth);
+    field('電話', data.guaPhone);
+    field('職業', data.guaJob);
+    field('月収', data.guaIncome ? ('¥' + data.guaIncome) : '-');
+    field('住所', data.guaAddress);
+  } else {
+    field('保証会社', data.guaCompanyName);
+  }
+
+  // 6. Documents
+  section('6. 提出書類 / Documents');
+  field('選択書類', (data.documents || []).join(', ') || '-');
+  field('備考 Notes', data.docNotes);
+
+  // 7. Images from uploads
+  const files = data.uploadedFiles || {};
+  const fileKeys = Object.keys(files);
+  if(fileKeys.length){
+    section('7. 添付ファイル / Attached Files');
+    for(const key of fileKeys){
+      const f = files[key];
+      if(!f) continue;
+      ensureSpace(10);
+      doc.setFontSize(9);
+      doc.setFont(undefined, 'bold');
+      doc.text((f.name || key), margin, y);
+      y += 5;
+      if(f.data && typeof f.data === 'string' && f.data.indexOf('data:image') === 0){
+        try {
+          const imgH = 50;
+          ensureSpace(imgH + 4);
+          const fmt = f.data.indexOf('image/png') >= 0 ? 'PNG' : 'JPEG';
+          doc.addImage(f.data, fmt, margin, y, 80, imgH);
+          y += imgH + 4;
+        } catch(e){
+          smallNote('(画像の埋め込みに失敗: ' + (f.name||key) + ')');
+        }
+      } else if(f.data && f.data.indexOf('data:application/pdf') === 0){
+        smallNote('PDF添付: ' + (f.name||key) + ' (ファイル名のみ記録)');
+      } else {
+        smallNote('ファイル: ' + (f.name||key) + (f.note ? (' — ' + f.note) : ''));
+      }
+    }
+  }
+
+  // Footer on last page
+  const pageCount = doc.internal.getNumberOfPages();
+  for(let i = 1; i <= pageCount; i++){
+    doc.setPage(i);
+    doc.setFontSize(7);
+    doc.setTextColor(150,150,150);
+    doc.text('NASON HOME · 賃貸借申込 · Page ' + i + '/' + pageCount, pageW / 2, 290, { align: 'center' });
+  }
+
+  const filename = 'NASON_申込_' + (data.appName || 'application').replace(/\s+/g, '_') + '_' + String(data.id).slice(-6) + '.pdf';
+  doc.save(filename);
+  return filename;
+}
+
+async function submitForm(){
+  const data = collectData();
+  // attach full uploaded file data for PDF/admin
+  data.uploadedFiles = Object.assign({}, uploadedFilesStore);
+  try {
+    await generateApplicationPDF(data);
+  } catch(err){
+    console.error(err);
+    alert(t('PDF作成中にエラーが発生しましたが、登録は保存されます','PDF作成中にエラーが発生しましたが、登録は保存されます','PDF error, but registration will be saved'));
+  }
+  // strip heavy base64 before localStorage if too large — keep names + small previews
+  const toStore = Object.assign({}, data);
+  const lightFiles = {};
+  const uf = toStore.uploadedFiles || {};
+  Object.keys(uf).forEach(function(k){
+    const f = uf[k];
+    if(!f) return;
+    // keep images under ~400KB each for admin re-PDF
+    if(f.data && f.data.length < 400000){
+      lightFiles[k] = f;
+    } else {
+      lightFiles[k] = { name: f.name, type: f.type, note: f.note || 'large file — included in downloaded PDF only' };
+    }
+  });
+  toStore.uploadedFiles = lightFiles;
+  const list = getRegs();
+  list.unshift(toStore);
+  try {
+    saveRegs(list);
+  } catch(e){
+    // localStorage full — save without images
+    toStore.uploadedFiles = {};
+    Object.keys(uf).forEach(function(k){ toStore.uploadedFiles[k] = { name: (uf[k]||{}).name }; });
+    list[0] = toStore;
+    saveRegs(list);
+  }
+  goStep(8);
+}
+
 function getRegs(){try{return JSON.parse(localStorage.getItem(STORAGE)||'[]')}catch{return[]}}
 function saveRegs(l){localStorage.setItem(STORAGE,JSON.stringify(l))}
 
@@ -630,6 +852,13 @@ document.getElementById('modalBody').innerHTML=h;document.getElementById('stSele
 function closeModal(){document.getElementById('detailModal').classList.remove('show');}
 function saveStatus(){const list=getRegs();const i=list.findIndex(r=>r.id===currentId);if(i>=0){list[i].status=document.getElementById('stSelect').value;list[i].admin_note=document.getElementById('adNote').value;saveRegs(list);}closeModal();renderAdmin();}
 function delReg(id){if(!confirm('Xóa?'))return;saveRegs(getRegs().filter(r=>r.id!==id));renderAdmin();}
+function downloadRegPDF(){
+  const list=getRegs();
+  const d=list.find(r=>r.id===currentId);
+  if(!d){alert('Not found');return;}
+  generateApplicationPDF(d).catch(e=>{console.error(e);alert('PDF error');});
+}
+
 function exportCSV(){const list=getRegs();if(!list.length){alert('No data');return;}const h=['ID','Date','Type','Name','Kana','Phone','Email','Nationality','Visa','Area','BudgetMax','MoveIn','Company','Income','Occupants','Emergency','GuarantorType','Status'];const rows=list.map(r=>[r.id,r.created_at,r.applicantType,r.appName,r.appKana,r.appPhone,r.appEmail,r.appNationality,r.appVisa,r.preferredArea,r.budgetMax,r.moveInDate,r.appCompany,r.appIncome,r.numOccupants,r.emgName,r.guarantorType,r.status].map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(','));const csv='\\uFEFF'+h.join(',')+'\\n'+rows.join('\\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=`applications_${new Date().toISOString().slice(0,10)}.csv`;a.click();}
 document.getElementById('detailModal').addEventListener('click',e=>{if(e.target.id==='detailModal')closeModal();});
 setLang(curLang);renderSteps();
