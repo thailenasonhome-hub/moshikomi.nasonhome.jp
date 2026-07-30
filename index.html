@@ -398,7 +398,7 @@ footer{text-align:center;padding:20px;color:#94a3b8;font-size:.8rem}
 <div id="pageLogin" class="hidden"><div class="login-box"><h1>🔐 Admin Login</h1><div id="loginError" class="error-msg hidden">Sai mật khẩu</div>
 <input type="password" id="adminPw" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
 <button onclick="doLogin()">Login</button>
-<p style="margin-top:12px;font-size:.8rem;color:#666">Default: <code>admin123</code></p>
+
 <p style="margin-top:10px"><a href="#" onclick="showForm();return false;" style="color:#0d9488;font-size:.85rem">← Quay lại</a></p></div></div>
 
 <div id="pageAdmin" class="container hidden" style="max-width:1000px">
@@ -433,7 +433,7 @@ footer{text-align:center;padding:20px;color:#94a3b8;font-size:.8rem}
 
 <script>
 const STEPS=[{vi:'Đồng ý',ja:'同意',en:'Consent'},{vi:'Nội dung',ja:'賃貸借\\n申込内容',en:'Details'},{vi:'Người ĐK',ja:'申込者',en:'Applicant'},{vi:'Người ở',ja:'入居者',en:'Occupants'},{vi:'Khẩn cấp',ja:'緊急\\n連絡先',en:'Emergency'},{vi:'Bảo lãnh',ja:'連帯\\n保証人',en:'Guarantor'},{vi:'Giấy tờ',ja:'提出書類',en:'Documents'},{vi:'Gửi',ja:'送信',en:'Submit'}];
-const STORAGE='rental_app_v2';const PASS='admin123';
+const STORAGE='rental_app_v2';const PASS='Nason2026';
 let curStep=0,curLang=localStorage.getItem('lang')||'vi',currentId=null;
 
 function setLang(l){curLang=l;localStorage.setItem('lang',l);document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===l));document.querySelectorAll('.t').forEach(el=>{const t=el.getAttribute('data-'+l);if(t)el.textContent=t;});renderSteps();}
