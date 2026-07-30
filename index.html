@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>賃貸借申込 | Đăng ký thuê nhà | Rental Application</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans','Noto Sans JP',sans-serif;background:#f5f7fa;color:#1e293b;line-height:1.6;min-height:100vh}
+.lang-switcher{position:fixed;top:12px;right:12px;z-index:100;display:flex;gap:3px;background:#fff;padding:3px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+.lang-btn{border:none;background:transparent;padding:5px 10px;border-radius:6px;font-weight:600;font-size:.8rem;cursor:pointer;color:#64748b}
+.lang-btn.active{background:#0d9488;color:#fff}
+.top-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:16px 0 0;position:sticky;top:0;z-index:50}
+.steps{display:flex;justify-content:center;align-items:flex-start;gap:0;max-width:900px;margin:0 auto;padding:0 12px 20px;overflow-x:auto}
+.step-item{display:flex;flex-direction:column;align-items:center;flex:1;min-width:70px;position:relative}
+.step-item:not(:last-child)::after{content:'';position:absolute;top:14px;left:calc(50% + 16px);width:calc(100% - 32px);height:2px;background:#cbd5e1}
+.step-item.done:not(:last-child)::after{background:#0d9488}
+.step-item.active:not(:last-child)::after{background:linear-gradient(90deg,#0d9488 50%,#cbd5e1 50%)}
+.step-num{width:28px;height:28px;border-radius:50%;background:#cbd5e1;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;z-index:1;transition:.2s}
+.step-item.active .step-num{background:#f59e0b;box-shadow:0 0 0 4px rgba(245,158,11,.25)}
+.step-item.done .step-num{background:#0d9488}
+.step-label{font-size:.65rem;color:#94a3b8;margin-top:6px;text-align:center;line-height:1.3;max-width:80px}
+.step-item.active .step-label,.step-item.done .step-label{color:#0d9488;font-weight:600}
+.container{max-width:720px;margin:0 auto;padding:24px 16px 60px}
+.card{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid #e2e8f0;padding:28px 24px;margin-bottom:20px}
+.card h2{font-size:1.15rem;font-weight:700;margin-bottom:6px;color:#0f172a}
+.card .desc{font-size:.88rem;color:#64748b;margin-bottom:20px}
+.section-title{font-size:.95rem;font-weight:600;color:#334155;margin:20px 0 12px;padding-bottom:6px;border-bottom:1px solid #e2e8f0}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{display:flex;flex-direction:column}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:.82rem;font-weight:500;color:#475569;margin-bottom:4px}
+.form-group label .req{color:#ef4444}
+.form-group input,.form-group select,.form-group textarea{padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:.92rem;font-family:inherit;background:#fafafa;transition:.15s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#0d9488;box-shadow:0 0 0 3px rgba(13,148,136,.15);background:#fff}
+.form-group textarea{resize:vertical;min-height:80px}
+.radio-group{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.radio-item{display:flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid #d1d5db;border-radius:8px;cursor:pointer;font-size:.9rem;transition:.15s;background:#fff}
+.radio-item:has(input:checked){border-color:#0d9488;background:#f0fdfa}
+.radio-item input{accent-color:#0d9488}
+.type-btns{display:flex;gap:16px;justify-content:center;margin:20px 0}
+.type-btn{padding:14px 40px;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit;min-width:140px}
+.type-btn.personal{background:#3b82f6;color:#fff}
+.type-btn.personal:hover,.type-btn.personal.active{background:#2563eb;box-shadow:0 4px 12px rgba(37,99,235,.3)}
+.type-btn.corp{background:#f59e0b;color:#fff}
+.type-btn.corp:hover,.type-btn.corp.active{background:#d97706;box-shadow:0 4px 12px rgba(217,119,6,.3)}
+.consent-box{border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;margin-bottom:16px}
+.consent-item{padding:14px 16px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:10px}
+.consent-item:last-child{border-bottom:none}
+.consent-item label{font-size:.9rem;cursor:pointer;flex:1}
+.nav-btns{display:flex;justify-content:space-between;gap:12px;margin-top:24px}
+.btn{padding:12px 28px;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
+.btn-next{background:#1e3a5f;color:#fff;flex:1}
+.btn-next:hover{background:#0f2744}
+.btn-next:disabled{opacity:.5;cursor:not-allowed}
+.btn-prev{background:#e2e8f0;color:#475569}
+.btn-prev:hover{background:#cbd5e1}
+.btn-submit{background:#0d9488;color:#fff;flex:1}
+.btn-submit:hover{background:#0f766e}
+.hidden{display:none!important}
+.page{display:none}
+.page.active{display:block}
+.occupant-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:12px}
+.success-box{text-align:center;padding:48px 24px}
+.success-box .icon{font-size:3.5rem;margin-bottom:12px}
+.success-box h2{font-size:1.4rem;margin-bottom:8px}
+.success-box p{color:#64748b;margin-bottom:20px}
+.admin-link{text-align:center;margin-top:16px}
+.admin-link a{color:#0d9488;font-size:.9rem;text-decoration:none}
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.stats{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.stat-card{background:#f0fdfa;padding:12px 18px;border-radius:10px;min-width:100px}
+.stat-card .num{font-size:1.4rem;font-weight:700;color:#0d9488}
+.stat-card .label{font-size:.75rem;color:#64748b}
+.filter-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.filter-bar select,.filter-bar input{padding:7px 10px;border:1px solid #d1d5db;border-radius:7px;font-size:.85rem}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th,td{padding:9px 10px;text-align:left;border-bottom:1px solid #e2e8f0}
+th{background:#f8fafc;font-weight:600;color:#475569;white-space:nowrap}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:600}
+.badge-new{background:#dcfce7;color:#15803d}
+.badge-contacted{background:#e0e7ff;color:#4338ca}
+.badge-closed{background:#f1f5f9;color:#64748b}
+.btn-sm{padding:3px 9px;border:none;border-radius:5px;font-size:.78rem;cursor:pointer;margin-right:3px}
+.btn-view{background:#0d9488;color:#fff}
+.btn-del{background:#fee2e2;color:#dc2626}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center}
+.modal.show{display:flex}
+.modal-content{background:#fff;border-radius:12px;padding:24px;max-width:580px;width:94%;max-height:85vh;overflow-y:auto}
+.modal-content h2{font-size:1.1rem;margin-bottom:12px}
+.detail-row{margin-bottom:6px;font-size:.88rem}
+.detail-row strong{display:inline-block;min-width:130px;color:#475569}
+.login-box{max-width:360px;margin:80px auto;background:#fff;padding:32px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.08);text-align:center}
+.login-box h1{font-size:1.3rem;margin-bottom:16px}
+.login-box input{width:100%;padding:11px 14px;border:1px solid #d1d5db;border-radius:8px;font-size:.95rem;margin-bottom:12px}
+.login-box button{width:100%;padding:12px;background:#0d9488;color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer}
+.error-msg{color:#dc2626;font-size:.85rem;margin-bottom:10px}
+footer{text-align:center;padding:20px;color:#94a3b8;font-size:.8rem}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}.step-label{font-size:.58rem;max-width:60px}.card{padding:20px 14px}.type-btns{flex-direction:column;align-items:center}}
+</style>
+</head>
+<body>
+<div class="lang-switcher">
+<button class="lang-btn active" data-lang="vi" onclick="setLang('vi')">VI</button>
+<button class="lang-btn" data-lang="ja" onclick="setLang('ja')">JP</button>
+<button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+</div>
+<div class="top-bar" id="stepsBar"><div class="steps" id="stepsContainer"></div></div>
+<div class="container" id="formContainer">
+
+<!-- STEP 0: Consent -->
+<div class="page active" id="step0">
+<div class="card">
+<h2 class="t" data-vi="Đồng ý về việc xử lý thông tin cá nhân" data-ja="個人情報の取扱についての同意" data-en="Consent regarding personal information">個人情報の取扱についての同意</h2>
+<p class="desc t" data-vi="Vui lòng xác nhận và đồng ý với các điều khoản xử lý thông tin cá nhân dưới đây trước khi tiếp tục đăng ký." data-ja="以下の個人情報の取扱に関する同意書をご確認いただき、同意しましたらチェックの上申込にお進みください。" data-en="Please review and agree to the personal information handling terms below before proceeding.">以下の個人情報の取扱に関する同意書をご確認いただき、同意しましたらチェックの上申込にお進みください。</p>
+<div class="consent-box">
+<div class="consent-item"><input type="checkbox" id="consent1"><label for="consent1"><span class="t" data-vi="Đồng ý thư của công ty quản lý" data-ja="管理会社同意書" data-en="Management company consent">管理会社同意書</span></label></div>
+<div class="consent-item"><input type="checkbox" id="consent2"><label for="consent2"><span class="t" data-vi="Đồng ý thư của công ty bảo lãnh" data-ja="保証会社同意書" data-en="Guarantee company consent">保証会社同意書</span></label></div>
+</div>
+<p style="font-size:.85rem;color:#64748b;margin:12px 0 8px" class="t" data-vi="Chỉ người đăng ký hoặc người được ủy quyền mới được thực hiện đăng ký. Vui lòng xác nhận." data-ja="申込はご本人さま、または代理での申込を委任された方のみが行うことができます。ご確認の上、以下にチェックを入れてください。" data-en="Only the applicant or an authorized agent may submit this application.">申込はご本人さま、または代理での申込を委任された方のみが行うことができます。</p>
+<div class="consent-box">
+<div class="consent-item"><input type="checkbox" id="consent3"><label for="consent3" class="t" data-vi="Tôi là người đăng ký hoặc người được ủy quyền đăng ký." data-ja="私は申込者本人、または代理での申込を委任された者です。" data-en="I am the applicant or an authorized agent.">私は申込者本人、または代理での申込を委任された者です。</label></div>
+</div>
+<div class="nav-btns"><button class="btn btn-next" id="btnConsent" onclick="goStep(1)" disabled><span class="t" data-vi="Đồng ý và tiếp tục" data-ja="同意して次へ" data-en="Agree and continue">同意して次へ</span></button></div>
+</div>
+</div>
+
+<!-- STEP 1: Application content -->
+<div class="page" id="step1">
+<div class="card">
+<h2 class="t" data-vi="1. Nội dung đăng ký thuê" data-ja="1. 賃貸借申込内容" data-en="1. Rental Application Details">1. 賃貸借申込内容</h2>
+<p class="desc t" data-vi="Chọn loại đăng ký và điền thông tin cơ bản về bất động sản." data-ja="申込の種類と物件に関する基本情報をご記入ください。" data-en="Select application type and fill in basic property information.">申込の種類と物件に関する基本情報をご記入ください。</p>
+<div class="section-title t" data-vi="Loại đăng ký" data-ja="個人 or 法人を選択して下さい" data-en="Select Individual or Corporation">個人 or 法人を選択して下さい</div>
+<div class="type-btns">
+<button type="button" class="type-btn personal active" data-type="personal" onclick="selectType('personal')"><span class="t" data-vi="Cá nhân" data-ja="個人" data-en="Individual">個人</span></button>
+<button type="button" class="type-btn corp" data-type="corp" onclick="selectType('corp')"><span class="t" data-vi="Pháp nhân / Công ty" data-ja="法人" data-en="Corporation">法人</span></button>
+</div>
+<input type="hidden" id="applicantType" value="personal">
+<div class="section-title t" data-vi="Thông tin bất động sản mong muốn" data-ja="希望物件情報" data-en="Desired Property">希望物件情報</div>
+<div class="form-grid">
+<div class="form-group full"><label><span class="t" data-vi="Loại hình" data-ja="物件種別" data-en="Property type">物件種別</span> <span class="req">*</span></label>
+<select id="propertyCategory"><option value="residential">住居・アパート・マンション</option><option value="commercial">店舗・事務所</option></select></div>
+<div class="form-group full"><label><span class="t" data-vi="Tên / Địa chỉ BĐS (nếu đã có)" data-ja="物件名・所在地（決まっている場合）" data-en="Property name / Address">物件名・所在地（決まっている場合）</span></label>
+<input type="text" id="propertyName" placeholder="例: ○○マンション 201号室"></div>
+<div class="form-group"><label><span class="t" data-vi="Khu vực mong muốn" data-ja="希望エリア" data-en="Preferred area">希望エリア</span> <span class="req">*</span></label>
+<input type="text" id="preferredArea" required placeholder="東京都23区、横浜、大阪..."></div>
+<div class="form-group"><label><span class="t" data-vi="Loại phòng / Diện tích" data-ja="間取り・面積" data-en="Layout / Area">間取り・面積</span></label>
+<input type="text" id="layout" required placeholder="1LDK / 25㎡"></div>
+<div class="form-group"><label><span class="t" data-vi="Ngân sách tối thiểu (¥/tháng)" data-ja="最低家賃 (円/月)" data-en="Min rent">最低家賃 (円/月)</span></label>
+<input type="number" id="budgetMin" required placeholder="50000"></div>
+<div class="form-group"><label><span class="t" data-vi="Ngân sách tối đa (¥/tháng)" data-ja="最高家賃 (円/月)" data-en="Max rent">最高家賃 (円/月)</span> <span class="req">*</span></label>
+<input type="number" id="budgetMax" required placeholder="100000"></div>
+<div class="form-group"><label><span class="t" data-vi="Ngày mong muốn chuyển vào" data-ja="入居（開店）希望日" data-en="Move-in date">入居（開店）希望日</span> <span class="req">*</span></label>
+<input type="text" id="moveInDate" required placeholder="2026年9月1日 / ASAP"></div>
+<div class="form-group"><label><span class="t" data-vi="Thời hạn thuê" data-ja="希望契約期間" data-en="Contract period">希望契約期間</span></label>
+<select id="contractPeriod"><option value="2years">2年</option><option value="1year">1年</option><option value="3years">3年</option><option value="other">その他</option></select></div>
+</div>
+<div class="nav-btns">
+<button class="btn btn-prev" onclick="goStep(0)"><span class="t" data-vi="Quay lại" data-ja="戻る" data-en="Back">戻る</span></button>
+<button class="btn btn-next" onclick="goStep(2)"><span class="t" data-vi="Tiếp theo" data-ja="次へ" data-en="Next">次へ</span></button>
+</div>
+</div>
+</div>
+
+<!-- STEP 2: Applicant -->
+<div class="page" id="step2">
+<div class="card">
+<h2 class="t" data-vi="2. Thông tin người đăng ký" data-ja="2. 申込者情報" data-en="2. Applicant Information">2. 申込者情報</h2>
+<p class="desc t" data-vi="Điền đầy đủ thông tin người đăng ký." data-ja="申込者の情報を正確にご記入ください。" data-en="Fill in the applicant information accurately.">申込者の情報を正確にご記入ください。</p>
+<div class="form-grid">
+<div class="form-group"><label><span class="t" data-vi="Họ tên" data-ja="氏名（漢字）" data-en="Full name">氏名（漢字）</span> <span class="req">*</span></label><input type="text" id="appName" required placeholder="山田 太郎"></div>
+<div class="form-group"><label><span class="t" data-vi="Furigana" data-ja="フリガナ" data-en="Furigana">フリガナ</span> <span class="req">*</span></label><input type="text" id="appKana" required placeholder="ヤマダ タロウ"></div>
+<div class="form-group"><label><span class="t" data-vi="Ngày sinh" data-ja="生年月日" data-en="Date of birth">生年月日</span> <span class="req">*</span></label><input type="date" id="appBirth" required></div>
+<div class="form-group"><label><span class="t" data-vi="Giới tính" data-ja="性別" data-en="Gender">性別</span></label><select id="appGender" required><option value="">--</option><option value="male">男性</option><option value="female">女性</option><option value="other">その他</option></select></div>
+<div class="form-group"><label><span class="t" data-vi="Quốc tịch" data-ja="国籍" data-en="Nationality">国籍</span> <span class="req">*</span></label><input type="text" id="appNationality" required placeholder="ベトナム"></div>
+<div class="form-group"><label><span class="t" data-vi="Tư cách lưu trú" data-ja="在留資格" data-en="Visa status">在留資格</span> <span class="req">*</span></label>
+<select id="appVisa" required><option value="">--</option><option value="Engineer">技術・人文知識・国際業務</option><option value="Student">留学</option><option value="Dependent">家族滞在</option><option value="Permanent">永住者</option><option value="Spouse">日本人の配偶者等</option><option value="Business">経営・管理</option><option value="Specified">特定技能</option><option value="Other">その他</option></select></div>
+<div class="form-group"><label><span class="t" data-vi="Thời hạn lưu trú" data-ja="在留期限" data-en="Visa expiry">在留期限</span></label><input type="date" id="appVisaExpiry" required></div>
+<div class="form-group"><label><span class="t" data-vi="Số điện thoại" data-ja="電話番号" data-en="Phone">電話番号</span> <span class="req">*</span></label><input type="tel" id="appPhone" required placeholder="090-1234-5678"></div>
+<div class="form-group"><label>LINE ID</label><input type="text" id="appLine"></div>
+<div class="form-group"><label>Email <span class="req">*</span></label><input type="email" id="appEmail" required></div>
+<div class="form-group full"><label><span class="t" data-vi="Địa chỉ hiện tại" data-ja="現住所" data-en="Current address">現住所</span> <span class="req">*</span></label><input type="text" id="appAddress" required placeholder="〒150-0001 東京都渋谷区..."></div>
+</div>
+<div class="section-title t" data-vi="Công việc / Thu nhập" data-ja="勤務先・収入情報" data-en="Employment & Income">勤務先・収入情報</div>
+<div class="form-grid">
+<div class="form-group full"><label><span class="t" data-vi="Tên công ty / Trường" data-ja="勤務先名・学校名" data-en="Company / School">勤務先名・学校名</span> <span class="req">*</span></label><input type="text" id="appCompany" required></div>
+<div class="form-group"><label><span class="t" data-vi="Nghề nghiệp" data-ja="職種・役職" data-en="Occupation">職種・役職</span></label><input type="text" id="appJob" required></div>
+<div class="form-group"><label><span class="t" data-vi="Số năm làm việc" data-ja="勤続年数" data-en="Years">勤続年数</span></label><input type="text" id="appYears" required placeholder="3年"></div>
+<div class="form-group"><label><span class="t" data-vi="Thu nhập/tháng (¥)" data-ja="月収（円）" data-en="Monthly income">月収（円）</span> <span class="req">*</span></label><input type="number" id="appIncome" required placeholder="300000"></div>
+<div class="form-group"><label><span class="t" data-vi="SĐT công ty" data-ja="勤務先電話番号" data-en="Work phone">勤務先電話番号</span></label><input type="tel" id="appWorkPhone" required></div>
+<div class="form-group full"><label><span class="t" data-vi="Địa chỉ công ty" data-ja="勤務先住所" data-en="Work address">勤務先住所</span></label><input type="text" id="appWorkAddress" required></div>
+</div>
+<div id="corpFields" class="hidden">
+<div class="section-title t" data-vi="Thông tin pháp nhân" data-ja="法人情報" data-en="Corporation Info">法人情報</div>
+<div class="form-grid">
+<div class="form-group full"><label><span class="t" data-vi="Tên công ty" data-ja="法人名" data-en="Company name">法人名</span></label><input type="text" id="corpName"></div>
+<div class="form-group"><label><span class="t" data-vi="Người đại diện" data-ja="代表者名" data-en="Representative">代表者名</span></label><input type="text" id="corpRep"></div>
+<div class="form-group"><label><span class="t" data-vi="Mã số pháp nhân" data-ja="法人番号" data-en="Corporate number">法人番号</span></label><input type="text" id="corpNumber"></div>
+<div class="form-group full"><label><span class="t" data-vi="Địa chỉ trụ sở" data-ja="本店所在地" data-en="Head office">本店所在地</span></label><input type="text" id="corpAddress"></div>
+</div>
+</div>
+<div class="nav-btns">
+<button class="btn btn-prev" onclick="goStep(1)"><span class="t" data-vi="Quay lại" data-ja="戻る" data-en="Back">戻る</span></button>
+<button class="btn btn-next" onclick="goStep(3)"><span class="t" data-vi="Tiếp theo" data-ja="次へ" data-en="Next">次へ</span></button>
+</div>
+</div>
+</div>
+
+<!-- STEP 3: Occupants -->
+<div class="page" id="step3">
+<div class="card">
+<h2 class="t" data-vi="3. Thông tin người ở" data-ja="3. 入居者情報" data-en="3. Occupant Information">3. 入居者情報</h2>
+<p class="desc t" data-vi="Điền thông tin tất cả người sẽ sinh sống (bao gồm người đăng ký)." data-ja="入居される全ての方の情報をご記入ください（申込者本人を含む）。" data-en="Fill in all occupants including the applicant.">入居される全ての方の情報をご記入ください。</p>
+<div class="form-group" style="margin-bottom:16px"><label><span class="t" data-vi="Tổng số người ở" data-ja="入居人数" data-en="Number of occupants">入居人数</span> <span class="req">*</span></label>
+<input type="number" id="numOccupants" min="1" max="10" value="1" style="max-width:120px" onchange="renderOccupants()"></div>
+<div id="occupantsContainer"></div>
+<div class="section-title t" data-vi="Thông tin khác" data-ja="その他" data-en="Other">その他</div>
+<div class="form-grid">
+<div class="form-group"><label><span class="t" data-vi="Nuôi thú cưng?" data-ja="ペット飼育" data-en="Pets">ペット飼育</span></label>
+<select id="hasPet"><option value="no">なし</option><option value="yes">あり</option></select></div>
+<div class="form-group"><label><span class="t" data-vi="Hút thuốc?" data-ja="喫煙" data-en="Smoking">喫煙</span></label>
+<select id="smoking"><option value="no">非喫煙</option><option value="yes">喫煙</option></select></div>
+<div class="form-group full" id="petDetail" style="display:none"><label><span class="t" data-vi="Chi tiết thú cưng" data-ja="ペット詳細" data-en="Pet details">ペット詳細</span></label>
+<input type="text" id="petInfo" placeholder="猫1匹 など"></div>
+</div>
+<div class="nav-btns">
+<button class="btn btn-prev" onclick="goStep(2)"><span class="t" data-vi="Quay lại" data-ja="戻る" data-en="Back">戻る</span></button>
+<button class="btn btn-next" onclick="goStep(4)"><span class="t" data-vi="Tiếp theo" data-ja="次へ" data-en="Next">次へ</span></button>
+</div>
+</div>
+</div>
+
+<!-- STEP 4: Emergency -->
+<div class="page" id="step4">
+<div class="card">
+<h2 class="t" data-vi="4. Người liên lạc khẩn cấp" data-ja="4. 緊急連絡先" data-en="4. Emergency Contact">4. 緊急連絡先</h2>
+<p class="desc t" data-vi="Người liên lạc khi khẩn cấp (người thân tại Nhật hoặc quê nhà)." data-ja="緊急時の連絡先をご記入ください。" data-en="Emergency contact person.">緊急時の連絡先をご記入ください。</p>
+<div class="form-grid">
+<div class="form-group"><label><span class="t" data-vi="Họ tên" data-ja="氏名" data-en="Name">氏名</span> <span class="req">*</span></label><input type="text" id="emgName" required></div>
+<div class="form-group"><label><span class="t" data-vi="Furigana" data-ja="フリガナ" data-en="Furigana">フリガナ</span></label><input type="text" id="emgKana" required></div>
+<div class="form-group"><label><span class="t" data-vi="Quan hệ" data-ja="続柄" data-en="Relationship">続柄</span> <span class="req">*</span></label>
+<select id="emgRelation" required><option value="">--</option><option value="parent">親</option><option value="sibling">兄弟姉妹</option><option value="spouse">配偶者</option><option value="relative">親族</option><option value="friend">友人</option><option value="other">その他</option></select></div>
+<div class="form-group"><label><span class="t" data-vi="Số điện thoại" data-ja="電話番号" data-en="Phone">電話番号</span> <span class="req">*</span></label><input type="tel" id="emgPhone" required></div>
+<div class="form-group"><label><span class="t" data-vi="Ngày sinh" data-ja="生年月日" data-en="Date of birth">生年月日</span> <span class="req">*</span></label><input type="date" id="emgBirth" required></div>
+<div class="form-group"><label>Email (Gmail) <span class="req">*</span></label><input type="email" id="emgEmail" required placeholder="example@gmail.com"></div>
+<div class="form-group full"><label><span class="t" data-vi="Địa chỉ" data-ja="住所" data-en="Address">住所</span> <span class="req">*</span></label><input type="text" id="emgAddress" required></div>
+</div>
+<div class="nav-btns">
+<button class="btn btn-prev" onclick="goStep(3)"><span class="t" data-vi="Quay lại" data-ja="戻る" data-en="Back">戻る</span></button>
+<button class="btn btn-next" onclick="goStep(5)"><span class="t" data-vi="Tiếp theo" data-ja="次へ" data-en="Next">次へ</span></button>
+</div>
+</div>
+</div>
+
+<!-- STEP 5: Guarantor -->
+<div class="page" id="step5">
+<div class="card">
+<h2 class="t" data-vi="5. Người bảo lãnh liên đới" data-ja="5. 連帯保証人" data-en="5. Joint Guarantor">5. 連帯保証人</h2>
+<p class="desc t" data-vi="Chọn công ty bảo lãnh hoặc điền thông tin người bảo lãnh cá nhân." data-ja="保証会社を利用する場合は「保証会社」を選択。個人保証人がいる場合は情報をご記入ください。" data-en="Select guarantee company or fill personal guarantor.">保証会社を利用する場合は「保証会社」を選択してください。</p>
+<div class="form-group" style="margin-bottom:16px"><label><span class="t" data-vi="Hình thức bảo lãnh" data-ja="保証の種類" data-en="Guarantor type">保証の種類</span> <span class="req">*</span></label>
+<div class="radio-group">
+<label class="radio-item"><input type="radio" name="guarantorType" value="company" checked onchange="toggleGuarantor()"> <span class="t" data-vi="Công ty bảo lãnh" data-ja="保証会社" data-en="Guarantee company">保証会社</span></label>
+<label class="radio-item"><input type="radio" name="guarantorType" value="personal" onchange="toggleGuarantor()"> <span class="t" data-vi="Người bảo lãnh cá nhân" data-ja="個人保証人" data-en="Personal">個人保証人</span></label>
+<label class="radio-item"><input type="radio" name="guarantorType" value="none" onchange="toggleGuarantor()"> <span class="t" data-vi="Chưa có" data-ja="未定" data-en="Not decided">未定</span></label>
+</div></div>
+<div id="guarantorPersonal" class="hidden">
+<div class="form-grid">
+<div class="form-group"><label><span class="t" data-vi="Họ tên" data-ja="氏名" data-en="Name">氏名</span></label><input type="text" id="guaName"></div>
+<div class="form-group"><label>フリガナ</label><input type="text" id="guaKana"></div>
+<div class="form-group"><label><span class="t" data-vi="Quan hệ" data-ja="申込者との関係" data-en="Relationship">申込者との関係</span></label><input type="text" id="guaRelation"></div>
+<div class="form-group"><label><span class="t" data-vi="Ngày sinh" data-ja="生年月日" data-en="DOB">生年月日</span></label><input type="date" id="guaBirth"></div>
+<div class="form-group"><label><span class="t" data-vi="SĐT" data-ja="電話番号" data-en="Phone">電話番号</span></label><input type="tel" id="guaPhone"></div>
+<div class="form-group"><label><span class="t" data-vi="Nghề nghiệp" data-ja="職業" data-en="Job">職業</span></label><input type="text" id="guaJob"></div>
+<div class="form-group"><label><span class="t" data-vi="Thu nhập/tháng" data-ja="月収" data-en="Income">月収（円）</span></label><input type="number" id="guaIncome"></div>
+<div class="form-group full"><label><span class="t" data-vi="Địa chỉ" data-ja="住所" data-en="Address">住所</span></label><input type="text" id="guaAddress"></div>
+</div>
+</div>
+<div id="guarantorCompany">
+<div class="form-group"><label><span class="t" data-vi="Tên công ty bảo lãnh" data-ja="保証会社名" data-en="Company name">保証会社名（決まっている場合）</span></label>
+<input type="text" id="guaCompanyName" placeholder="オリコ、ジャックス、全保連 など"></div>
+</div>
+<div class="nav-btns">
+<button class="btn btn-prev" onclick="goStep(4)"><span class="t" data-vi="Quay lại" data-ja="戻る" data-en="Back">戻る</span></button>
+<button class="btn btn-next" onclick="goStep(6)"><span class="t" data-vi="Tiếp theo" data-ja="次へ" data-en="Next">次へ</span></button>
+</div>
+</div>
+</div>
+
+<!-- STEP 6: Documents -->
+<div class="page" id="step6">
+<div class="card">
+<h2 class="t" data-vi="6. Giấy tờ cần nộp" data-ja="6. 申込時提出書類" data-en="6. Required Documents">6. 申込時提出書類</h2>
+<p class="desc t" data-vi="Chọn các giấy tờ bạn có thể nộp (có thể nộp sau)." data-ja="提出可能な書類にチェックを入れてください。（後日提出でも可）" data-en="Check documents you can submit (can submit later).">提出可能な書類にチェックを入れてください。</p>
+<p id="docsHintPersonal" style="font-size:.85rem;color:#ef4444;margin-bottom:12px">* 必須提出（個人）: 在留カード（両面）、パスポート、収入証明書・給与明細</p>
+<p id="docsHintCorp" style="font-size:.85rem;color:#ef4444;margin-bottom:12px;display:none">* 必須提出（法人）: 在留カード（両面）、登記簿謄本（会社）、決算書</p>
+<div class="consent-box" id="docsList">
+<div class="consent-item" style="flex-wrap:wrap" data-for="both">
+  <input type="checkbox" id="doc1" value="residence_card">
+  <label for="doc1" style="flex:1">在留カード（両面） <span class="req">*</span></label>
+  <input type="file" id="file1" accept="image/*,.pdf" style="font-size:.8rem;max-width:200px" onchange="onFileSelect(1)">
+  <span id="file1name" style="font-size:.75rem;color:#0d9488;width:100%;margin-left:28px"></span>
+</div>
+<div class="consent-item" style="flex-wrap:wrap" data-for="personal" id="docRow2">
+  <input type="checkbox" id="doc2" value="passport">
+  <label for="doc2" style="flex:1">パスポート <span class="req doc-req-personal">*</span></label>
+  <input type="file" id="file2" accept="image/*,.pdf" style="font-size:.8rem;max-width:200px" onchange="onFileSelect(2)">
+  <span id="file2name" style="font-size:.75rem;color:#0d9488;width:100%;margin-left:28px"></span>
+</div>
+<div class="consent-item" style="flex-wrap:wrap" data-for="personal" id="docRow3">
+  <input type="checkbox" id="doc3" value="income_cert">
+  <label for="doc3" style="flex:1">収入証明書・給与明細 <span class="req doc-req-personal">*</span></label>
+  <input type="file" id="file3" accept="image/*,.pdf" style="font-size:.8rem;max-width:200px" onchange="onFileSelect(3)">
+  <span id="file3name" style="font-size:.75rem;color:#0d9488;width:100%;margin-left:28px"></span>
+</div>
+<div class="consent-item" style="flex-wrap:wrap;display:none" data-for="corp" id="docRowTohon">
+  <input type="checkbox" id="docTohon" value="tohon">
+  <label for="docTohon" style="flex:1">登記簿謄本（会社の謄本） <span class="req">*</span></label>
+  <input type="file" id="fileTohon" accept="image/*,.pdf" style="font-size:.8rem;max-width:200px" onchange="onFileSelect('Tohon')">
+  <span id="fileTohonname" style="font-size:.75rem;color:#0d9488;width:100%;margin-left:28px"></span>
+</div>
+<div class="consent-item" style="flex-wrap:wrap;display:none" data-for="corp" id="docRowKessan">
+  <input type="checkbox" id="docKessan" value="kessan">
+  <label for="docKessan" style="flex:1">決算書（会社の決算） <span class="req">*</span></label>
+  <input type="file" id="fileKessan" accept="image/*,.pdf" style="font-size:.8rem;max-width:200px" onchange="onFileSelect('Kessan')">
+  <span id="fileKessanname" style="font-size:.75rem;color:#0d9488;width:100%;margin-left:28px"></span>
+</div>
+<div class="consent-item" style="flex-wrap:wrap" data-for="both">
+  <input type="checkbox" id="doc4" value="tax_cert">
+  <label for="doc4" style="flex:1">課税証明書・納税証明書</label>
+  <input type="file" id="file4" accept="image/*,.pdf" style="font-size:.8rem;max-width:200px" onchange="onFileSelect(4)">
+  <span id="file4name" style="font-size:.75rem;color:#0d9488;width:100%;margin-left:28px"></span>
+</div>
+<div class="consent-item" style="flex-wrap:wrap" data-for="both">
+  <input type="checkbox" id="doc5" value="employment">
+  <label for="doc5" style="flex:1">在職証明書・雇用契約書</label>
+  <input type="file" id="file5" accept="image/*,.pdf" style="font-size:.8rem;max-width:200px" onchange="onFileSelect(5)">
+  <span id="file5name" style="font-size:.75rem;color:#0d9488;width:100%;margin-left:28px"></span>
+</div>
+<div class="consent-item" style="flex-wrap:wrap" data-for="both">
+  <input type="checkbox" id="doc6" value="student">
+  <label for="doc6" style="flex:1">学生証・入学許可書</label>
+  <input type="file" id="file6" accept="image/*,.pdf" style="font-size:.8rem;max-width:200px" onchange="onFileSelect(6)">
+  <span id="file6name" style="font-size:.75rem;color:#0d9488;width:100%;margin-left:28px"></span>
+</div>
+<div class="consent-item" style="flex-wrap:wrap" data-for="both">
+  <input type="checkbox" id="doc7" value="bankbook">
+  <label for="doc7" style="flex:1">通帳コピー・残高証明</label>
+  <input type="file" id="file7" accept="image/*,.pdf" style="font-size:.8rem;max-width:200px" onchange="onFileSelect(7)">
+  <span id="file7name" style="font-size:.75rem;color:#0d9488;width:100%;margin-left:28px"></span>
+</div>
+<div class="consent-item" style="flex-wrap:wrap" data-for="both">
+  <input type="checkbox" id="doc8" value="other">
+  <label for="doc8" style="flex:1">その他書類</label>
+  <input type="file" id="file8" accept="image/*,.pdf" style="font-size:.8rem;max-width:200px" onchange="onFileSelect(8)">
+  <span id="file8name" style="font-size:.75rem;color:#0d9488;width:100%;margin-left:28px"></span>
+</div>
+</div>
+<div class="form-group" style="margin-top:16px"><label><span class="t" data-vi="Ghi chú thêm" data-ja="書類・その他のご要望" data-en="Additional notes">書類・その他のご要望</span></label>
+<textarea id="docNotes" rows="3"></textarea></div>
+<div class="nav-btns">
+<button class="btn btn-prev" onclick="goStep(5)"><span class="t" data-vi="Quay lại" data-ja="戻る" data-en="Back">戻る</span></button>
+<button class="btn btn-next" onclick="goStep(7)"><span class="t" data-vi="Tiếp theo" data-ja="次へ" data-en="Next">次へ</span></button>
+</div>
+</div>
+</div>
+
+<!-- STEP 7: Confirm -->
+<div class="page" id="step7">
+<div class="card">
+<h2 class="t" data-vi="7. Xác nhận và Gửi" data-ja="7. 内容確認・送信" data-en="7. Confirm & Submit">7. 内容確認・送信</h2>
+<p class="desc t" data-vi="Kiểm tra lại thông tin trước khi gửi." data-ja="送信前に内容をご確認ください。" data-en="Please review before submitting.">送信前に内容をご確認ください。</p>
+<div id="confirmSummary" style="font-size:.9rem;background:#f8fafc;border-radius:10px;padding:16px;margin-bottom:20px;max-height:320px;overflow-y:auto"></div>
+<div class="consent-box" style="margin-bottom:16px">
+<div class="consent-item"><input type="checkbox" id="finalConfirm"><label for="finalConfirm" class="t" data-vi="Tôi xác nhận thông tin trên là chính xác và đồng ý gửi đăng ký." data-ja="上記の内容に相違ないことを確認し、申し込みます。" data-en="I confirm the information is correct and agree to submit.">上記の内容に相違ないことを確認し、申し込みます。</label></div>
+</div>
+<div class="nav-btns">
+<button class="btn btn-prev" onclick="goStep(6)"><span class="t" data-vi="Quay lại" data-ja="戻る" data-en="Back">戻る</span></button>
+<button class="btn btn-submit" id="btnSubmit" onclick="submitForm()" disabled><span class="t" data-vi="Gửi đăng ký" data-ja="申し込みを送信する" data-en="Submit Application">申し込みを送信する</span></button>
+</div>
+</div>
+</div>
+
+<!-- SUCCESS -->
+<div class="page" id="stepSuccess">
+<div class="card success-box">
+<div class="icon">✅</div>
+<h2 class="t" data-vi="Đăng ký thành công!" data-ja="お申し込みを受け付けました" data-en="Application Submitted!">お申し込みを受け付けました</h2>
+<p class="t" data-vi="Cảm ơn bạn. Chúng tôi sẽ liên hệ sớm." data-ja="ご登録ありがとうございます。担当者よりご連絡いたします。" data-en="Thank you. We will contact you soon.">ご登録ありがとうございます。</p>
+<button class="btn btn-next" style="max-width:240px;margin:0 auto" onclick="location.reload()"><span class="t" data-vi="Đăng ký thêm" data-ja="続けて申し込む" data-en="Register another">続けて申し込む</span></button>
+</div>
+</div>
+
+<div class="admin-link"><a href="#" onclick="showAdminLogin();return false;" class="t" data-vi="🔐 Trang quản trị" data-ja="🔐 管理画面" data-en="🔐 Admin">🔐 管理画面</a></div>
+</div>
+
+<!-- ADMIN -->
+<div id="pageLogin" class="hidden"><div class="login-box"><h1>🔐 Admin Login</h1><div id="loginError" class="error-msg hidden">Sai mật khẩu</div>
+<input type="password" id="adminPw" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+<button onclick="doLogin()">Login</button>
+<p style="margin-top:12px;font-size:.8rem;color:#666">Default: <code>admin123</code></p>
+<p style="margin-top:10px"><a href="#" onclick="showForm();return false;" style="color:#0d9488;font-size:.85rem">← Quay lại</a></p></div></div>
+
+<div id="pageAdmin" class="container hidden" style="max-width:1000px">
+<div class="card">
+<div class="admin-header"><h2 style="margin:0;font-size:1.15rem">📋 登録一覧</h2>
+<div><button class="btn btn-prev" style="padding:7px 14px;font-size:.85rem" onclick="exportCSV()">📥 CSV</button>
+<button class="btn btn-prev" style="padding:7px 14px;font-size:.85rem;margin-left:6px" onclick="logout()">Logout</button></div></div>
+<div class="stats" id="statsBar"></div>
+<div class="filter-bar">
+<select id="fType" onchange="renderAdmin()"><option value="">Tất cả</option><option value="personal">個人</option><option value="corp">法人</option></select>
+<select id="fStatus" onchange="renderAdmin()"><option value="">Status</option><option value="new">Mới</option><option value="contacted">Đã LH</option><option value="closed">Đóng</option></select>
+<input type="text" id="fSearch" placeholder="Tìm..." onkeyup="renderAdmin()">
+</div>
+<div style="overflow-x:auto"><table><thead><tr><th>ID</th><th>Ngày</th><th>Họ tên</th><th>SĐT</th><th>Loại</th><th>Khu vực</th><th>Ngân sách</th><th>Status</th><th></th></tr></thead><tbody id="adminBody"></tbody></table></div>
+</div>
+<div class="admin-link"><a href="#" onclick="showForm();return false;">← Về form</a></div>
+</div>
+
+<div class="modal" id="detailModal"><div class="modal-content">
+<h2 id="modalTitle">Chi tiết</h2><div id="modalBody"></div>
+<div style="margin-top:14px;border-top:1px solid #e2e8f0;padding-top:12px">
+<label><strong>Status:</strong></label>
+<select id="stSelect" style="width:100%;padding:8px;margin:6px 0;border-radius:7px;border:1px solid #d1d5db"><option value="new">Mới</option><option value="contacted">Đã LH</option><option value="closed">Đóng</option></select>
+<label><strong>Ghi chú:</strong></label>
+<textarea id="adNote" rows="2" style="width:100%;padding:8px;border-radius:7px;border:1px solid #d1d5db;margin:6px 0"></textarea>
+<div style="display:flex;gap:8px;margin-top:8px">
+<button class="btn-sm btn-view" style="padding:8px 18px" onclick="saveStatus()">Lưu</button>
+<button class="btn-sm" style="padding:8px 18px;background:#e2e8f0" onclick="closeModal()">Đóng</button>
+</div></div></div></div>
+
+<footer>© 2026 賃貸借申込システム</footer>
+
+<script>
+const STEPS=[{vi:'Đồng ý',ja:'同意',en:'Consent'},{vi:'Nội dung',ja:'賃貸借\\n申込内容',en:'Details'},{vi:'Người ĐK',ja:'申込者',en:'Applicant'},{vi:'Người ở',ja:'入居者',en:'Occupants'},{vi:'Khẩn cấp',ja:'緊急\\n連絡先',en:'Emergency'},{vi:'Bảo lãnh',ja:'連帯\\n保証人',en:'Guarantor'},{vi:'Giấy tờ',ja:'提出書類',en:'Documents'},{vi:'Gửi',ja:'送信',en:'Submit'}];
+const STORAGE='rental_app_v2';const PASS='admin123';
+let curStep=0,curLang=localStorage.getItem('lang')||'vi',currentId=null;
+
+function setLang(l){curLang=l;localStorage.setItem('lang',l);document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===l));document.querySelectorAll('.t').forEach(el=>{const t=el.getAttribute('data-'+l);if(t)el.textContent=t;});renderSteps();}
+function t(vi,ja,en){return{vi,ja,en}[curLang]||vi;}
+function renderSteps(){const c=document.getElementById('stepsContainer');c.innerHTML=STEPS.map((s,i)=>{let cls='step-item';if(i<curStep)cls+=' done';if(i===curStep)cls+=' active';const label=(s[curLang]||s.ja).replace(/\\\\n/g,'<br>');return`<div class="${cls}"><div class="step-num">${i===0?'✓':i}</div><div class="step-label">${label}</div></div>`;}).join('');}
+
+const uploadedFilesStore={};
+function onFileSelect(n){
+  const f=document.getElementById('file'+n);
+  const nameEl=document.getElementById('file'+n+'name');
+  const docEl=document.getElementById('doc'+n) || document.getElementById('doc'+String(n));
+  if(f&&f.files&&f.files[0]){
+    nameEl.textContent='✓ '+f.files[0].name;
+    if(docEl) docEl.checked=true;
+    if(f.files[0].size<2*1024*1024){
+      const reader=new FileReader();
+      reader.onload=function(e){uploadedFilesStore['file'+n]={name:f.files[0].name,data:e.target.result,type:f.files[0].type};};
+      reader.readAsDataURL(f.files[0]);
+    } else {
+      uploadedFilesStore['file'+n]={name:f.files[0].name,data:null,type:f.files[0].type,note:'file too large'};
+    }
+  } else {if(nameEl) nameEl.textContent='';}
+}
+
+function updateDocsUI(){
+  const isCorp = document.getElementById('applicantType').value === 'corp';
+  document.getElementById('docsHintPersonal').style.display = isCorp ? 'none' : 'block';
+  document.getElementById('docsHintCorp').style.display = isCorp ? 'block' : 'none';
+  // personal-only rows
+  ['docRow2','docRow3'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display = isCorp ? 'none' : 'flex';
+  });
+  // corp-only rows
+  ['docRowTohon','docRowKessan'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display = isCorp ? 'flex' : 'none';
+  });
+}
+
+function validateStep(n){
+  const page=document.getElementById('step'+n);
+  if(!page) return true;
+  const requireds=page.querySelectorAll('input[required],select[required],textarea[required]');
+  for(const el of requireds){
+    if(el.type==='checkbox'||el.type==='radio') continue;
+    if(!el.value||!String(el.value).trim()){
+      el.focus();
+      el.style.borderColor='#ef4444';
+      setTimeout(()=>el.style.borderColor='',3000);
+      alert(t('Vui lòng điền đầy đủ các trường bắt buộc (*)','必須項目をすべて入力してください','Please fill all required fields (*)'));
+      return false;
+    }
+  }
+  // step 6 special: required docs + files (personal vs corp)
+  if(n===6){
+    const isCorp = document.getElementById('applicantType').value === 'corp';
+    if(isCorp){
+      // 法人: 在留カード, 謄本, 決算
+      if(!document.getElementById('doc1').checked || !document.getElementById('docTohon').checked || !document.getElementById('docKessan').checked){
+        alert(t('法人登録: 在留カード（両面）、登記簿謄本、決算書 を選択・アップロードしてください','法人登録: 在留カード（両面）、登記簿謄本、決算書 を選択・アップロードしてください','Corp: Please select Residence card, Tohon, Kessan'));
+        return false;
+      }
+      for(const id of ['1','Tohon','Kessan']){
+        const f=document.getElementById('file'+id);
+        if(!f||!f.files||!f.files[0]){
+          alert(t('法人登録: 必須3書類のファイルをアップロードしてください','法人登録: 必須3書類のファイルをアップロードしてください','Corp: Please upload the 3 required files'));
+          return false;
+        }
+      }
+    } else {
+      // 個人: 在留カード, パスポート, 収入証明
+      for(const id of ['doc1','doc2','doc3']){
+        if(!document.getElementById(id).checked){
+          alert(t('Vui lòng chọn và tải lên 3 giấy tờ bắt buộc','必須の3書類を選択・アップロードしてください','Please select and upload the 3 required documents'));
+          return false;
+        }
+      }
+      for(const id of [1,2,3]){
+        const f=document.getElementById('file'+id);
+        if(!f||!f.files||!f.files[0]){
+          alert(t('Vui lòng tải file cho 3 giấy tờ bắt buộc','必須の3書類のファイルをアップロードしてください','Please upload files for the 3 required documents'));
+          return false;
+        }
+      }
+    }
+  }
+  // step 3 occupants
+  if(n===3){
+    const phones=page.querySelectorAll('.occ-phone');
+    const addrs=page.querySelectorAll('.occ-address');
+    const names=page.querySelectorAll('.occ-name');
+    for(let i=0;i<names.length;i++){
+      if(!names[i].value.trim()||!phones[i]?.value.trim()||!addrs[i]?.value.trim()){
+        alert(t('Vui lòng điền đầy đủ thông tin người ở (họ tên, SĐT, địa chỉ)','入居者の氏名・電話番号・住所をすべて入力してください','Please fill all occupant name, phone, address'));
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function goStep(n){
+  // validate current before going forward
+  if(n>curStep && curStep>=1 && curStep<=7){
+    if(!validateStep(curStep)) return;
+  }
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  if(n===8){document.getElementById('stepSuccess').classList.add('active');document.getElementById('stepsBar').style.display='none';return;}
+  curStep=n;
+  document.getElementById('step'+n).classList.add('active');
+  document.getElementById('stepsBar').style.display='';
+  renderSteps();
+  window.scrollTo(0,0);
+  if(n===3)renderOccupants();
+  if(n===6)updateDocsUI();
+  if(n===7)buildSummary();
+}
+
+['consent1','consent2','consent3'].forEach(id=>{document.getElementById(id).addEventListener('change',()=>{document.getElementById('btnConsent').disabled=!(document.getElementById('consent1').checked&&document.getElementById('consent2').checked&&document.getElementById('consent3').checked);});});
+document.getElementById('finalConfirm').addEventListener('change',function(){document.getElementById('btnSubmit').disabled=!this.checked;});
+
+function selectType(type){document.getElementById('applicantType').value=type;document.querySelectorAll('.type-btn').forEach(b=>b.classList.toggle('active',b.dataset.type===type));document.getElementById('corpFields').classList.toggle('hidden',type!=='corp');if(typeof updateDocsUI==='function')updateDocsUI();}
+
+function renderOccupants(){const n=Math.max(1,Math.min(10,Number(document.getElementById('numOccupants').value)||1));let html='';for(let i=0;i<n;i++){html+=`<div class="occupant-card"><strong>${t('Người ở','入居者','Occupant')} ${i+1}${i===0?' ('+t('Người ĐK','申込者本人','Applicant')+')':''}</strong><div class="form-grid" style="margin-top:10px"><div class="form-group"><label>${t('Họ tên','氏名','Name')} <span class="req">*</span></label><input type="text" class="occ-name" data-i="${i}" required></div><div class="form-group"><label>フリガナ</label><input type="text" class="occ-kana" data-i="${i}"></div><div class="form-group"><label>${t('Ngày sinh','生年月日','DOB')} <span class="req">*</span></label><input type="date" class="occ-birth" data-i="${i}" required></div><div class="form-group"><label>${t('Quan hệ','続柄','Relation')}</label><select class="occ-rel" data-i="${i}"><option value="self">本人</option><option value="spouse">配偶者</option><option value="child">子供</option><option value="parent">親</option><option value="other">その他</option></select></div><div class="form-group"><label>${t('Quốc tịch','国籍','Nationality')}</label><input type="text" class="occ-nat" data-i="${i}"></div><div class="form-group"><label>${t('Nghề','職業','Job')}</label><input type="text" class="occ-job" data-i="${i}"></div>
+<div class="form-group"><label>${t('SĐT','電話番号','Phone')} <span class="req">*</span></label><input type="tel" class="occ-phone" data-i="${i}" required></div>
+<div class="form-group full"><label>${t('Địa chỉ','住所','Address')} <span class="req">*</span></label><input type="text" class="occ-address" data-i="${i}" required></div>
+</div></div>`;}document.getElementById('occupantsContainer').innerHTML=html;const n0=document.querySelector('.occ-name[data-i="0"]');if(n0&&!n0.value){n0.value=document.getElementById('appName').value||'';document.querySelector('.occ-kana[data-i="0"]').value=document.getElementById('appKana').value||'';}}
+document.getElementById('hasPet').addEventListener('change',function(){document.getElementById('petDetail').style.display=this.value==='yes'?'block':'none';});
+
+function toggleGuarantor(){const v=document.querySelector('input[name="guarantorType"]:checked').value;document.getElementById('guarantorPersonal').classList.toggle('hidden',v!=='personal');document.getElementById('guarantorCompany').classList.toggle('hidden',v==='personal');}
+
+function buildSummary(){const d=collectData();let h=`<p><strong>${t('Loại','種類','Type')}:</strong> ${d.applicantType==='corp'?'法人':'個人'} / ${d.propertyCategory==='commercial'?'店舗':'住居'}</p>`;h+=`<p><strong>${t('Khu vực','希望エリア','Area')}:</strong> ${d.preferredArea||'-'}</p>`;h+=`<p><strong>${t('Ngân sách','家賃','Budget')}:</strong> ¥${d.budgetMin||0}〜¥${d.budgetMax||0}</p>`;h+=`<p><strong>${t('Người ĐK','申込者','Applicant')}:</strong> ${d.appName} (${d.appKana}) / ${d.appPhone}</p>`;h+=`<p><strong>${t('Công ty','勤務先','Company')}:</strong> ${d.appCompany||'-'} / ¥${d.appIncome||0}</p>`;h+=`<p><strong>${t('Số người ở','入居人数','Occupants')}:</strong> ${d.numOccupants}</p>`;h+=`<p><strong>${t('Khẩn cấp','緊急連絡先','Emergency')}:</strong> ${d.emgName||'-'} (${d.emgPhone||'-'})</p>`;h+=`<p><strong>${t('Bảo lãnh','保証','Guarantor')}:</strong> ${d.guarantorType}</p>`;document.getElementById('confirmSummary').innerHTML=h;}
+
+function collectData(){const occ=[];document.querySelectorAll('.occ-name').forEach((el,i)=>{occ.push({name:el.value,kana:document.querySelector(`.occ-kana[data-i="${i}"]`)?.value,birth:document.querySelector(`.occ-birth[data-i="${i}"]`)?.value,rel:document.querySelector(`.occ-rel[data-i="${i}"]`)?.value,nat:document.querySelector(`.occ-nat[data-i="${i}"]`)?.value,job:document.querySelector(`.occ-job[data-i="${i}"]`)?.value,phone:document.querySelector(`.occ-phone[data-i="${i}"]`)?.value,address:document.querySelector(`.occ-address[data-i="${i}"]`)?.value});});const docs=[];const files={};document.querySelectorAll('#docsList input[type=checkbox]:checked').forEach(c=>docs.push(c.value));
+const fileIds=['1','2','3','4','5','6','7','8','Tohon','Kessan'];
+for(const i of fileIds){if(uploadedFilesStore['file'+i]){files['file'+i]=uploadedFilesStore['file'+i];}else{const f=document.getElementById('file'+i);if(f&&f.files&&f.files[0]){files['file'+i]={name:f.files[0].name,size:f.files[0].size,type:f.files[0].type};}}}
+// also collect corp doc checkboxes
+if(document.getElementById('docTohon')?.checked) docs.push('tohon');
+if(document.getElementById('docKessan')?.checked) docs.push('kessan');return{id:Date.now(),created_at:new Date().toISOString(),status:'new',admin_note:'',applicantType:document.getElementById('applicantType').value,propertyCategory:document.getElementById('propertyCategory').value,propertyName:document.getElementById('propertyName').value,preferredArea:document.getElementById('preferredArea').value,layout:document.getElementById('layout').value,budgetMin:document.getElementById('budgetMin').value,budgetMax:document.getElementById('budgetMax').value,moveInDate:document.getElementById('moveInDate').value,contractPeriod:document.getElementById('contractPeriod').value,appName:document.getElementById('appName').value,appKana:document.getElementById('appKana').value,appBirth:document.getElementById('appBirth').value,appGender:document.getElementById('appGender').value,appNationality:document.getElementById('appNationality').value,appVisa:document.getElementById('appVisa').value,appVisaExpiry:document.getElementById('appVisaExpiry').value,appPhone:document.getElementById('appPhone').value,appLine:document.getElementById('appLine').value,appEmail:document.getElementById('appEmail').value,appAddress:document.getElementById('appAddress').value,appCompany:document.getElementById('appCompany').value,appJob:document.getElementById('appJob').value,appYears:document.getElementById('appYears').value,appIncome:document.getElementById('appIncome').value,appWorkPhone:document.getElementById('appWorkPhone').value,appWorkAddress:document.getElementById('appWorkAddress').value,corpName:document.getElementById('corpName').value,corpRep:document.getElementById('corpRep').value,corpNumber:document.getElementById('corpNumber').value,corpAddress:document.getElementById('corpAddress').value,numOccupants:document.getElementById('numOccupants').value,occupants:occ,hasPet:document.getElementById('hasPet').value,petInfo:document.getElementById('petInfo').value,smoking:document.getElementById('smoking').value,emgName:document.getElementById('emgName').value,emgKana:document.getElementById('emgKana').value,emgRelation:document.getElementById('emgRelation').value,emgPhone:document.getElementById('emgPhone').value,emgBirth:document.getElementById('emgBirth').value,emgEmail:document.getElementById('emgEmail').value,emgAddress:document.getElementById('emgAddress').value,guarantorType:document.querySelector('input[name="guarantorType"]:checked')?.value,guaName:document.getElementById('guaName').value,guaKana:document.getElementById('guaKana').value,guaRelation:document.getElementById('guaRelation').value,guaBirth:document.getElementById('guaBirth').value,guaPhone:document.getElementById('guaPhone').value,guaJob:document.getElementById('guaJob').value,guaIncome:document.getElementById('guaIncome').value,guaAddress:document.getElementById('guaAddress').value,guaCompanyName:document.getElementById('guaCompanyName').value,documents:docs,uploadedFiles:files,docNotes:document.getElementById('docNotes').value};}
+
+function submitForm(){const data=collectData();const list=getRegs();list.unshift(data);saveRegs(list);goStep(8);}
+function getRegs(){try{return JSON.parse(localStorage.getItem(STORAGE)||'[]')}catch{return[]}}
+function saveRegs(l){localStorage.setItem(STORAGE,JSON.stringify(l))}
+
+function showAdminLogin(){document.getElementById('formContainer').classList.add('hidden');document.getElementById('stepsBar').classList.add('hidden');document.getElementById('pageLogin').classList.remove('hidden');document.getElementById('pageAdmin').classList.add('hidden');}
+function showForm(){document.getElementById('formContainer').classList.remove('hidden');document.getElementById('stepsBar').classList.remove('hidden');document.getElementById('pageLogin').classList.add('hidden');document.getElementById('pageAdmin').classList.add('hidden');}
+function doLogin(){if(document.getElementById('adminPw').value===PASS){sessionStorage.setItem('adm','1');showAdmin();}else{document.getElementById('loginError').classList.remove('hidden');}}
+function showAdmin(){document.getElementById('pageLogin').classList.add('hidden');document.getElementById('pageAdmin').classList.remove('hidden');document.getElementById('formContainer').classList.add('hidden');document.getElementById('stepsBar').classList.add('hidden');renderAdmin();}
+function logout(){sessionStorage.removeItem('adm');showForm();}
+
+function renderAdmin(){const list=getRegs();const type=document.getElementById('fType').value,st=document.getElementById('fStatus').value,q=(document.getElementById('fSearch').value||'').toLowerCase();
+document.getElementById('statsBar').innerHTML=`<div class="stat-card"><div class="num">${list.length}</div><div class="label">Tổng</div></div><div class="stat-card"><div class="num">${list.filter(r=>r.status==='new').length}</div><div class="label">Mới</div></div><div class="stat-card"><div class="num">${list.filter(r=>r.applicantType==='personal').length}</div><div class="label">個人</div></div><div class="stat-card"><div class="num">${list.filter(r=>r.applicantType==='corp').length}</div><div class="label">法人</div></div>`;
+const f=list.filter(r=>{if(type&&r.applicantType!==type)return false;if(st&&r.status!==st)return false;if(q&&!`${r.appName} ${r.appPhone} ${r.appEmail}`.toLowerCase().includes(q))return false;return true;});
+const tb=document.getElementById('adminBody');if(!f.length){tb.innerHTML='<tr><td colspan="9" style="text-align:center;padding:30px;color:#94a3b8">Chưa có dữ liệu</td></tr>';return;}
+tb.innerHTML=f.map(r=>{const d=r.created_at?new Date(r.created_at).toLocaleString('vi-VN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'';const stL={new:'Mới',contacted:'Đã LH',closed:'Đóng'}[r.status]||r.status;
+return`<tr><td>#${String(r.id).slice(-5)}</td><td>${d}</td><td><strong>${esc(r.appName)}</strong><br><small style="color:#64748b">${esc(r.appKana)}</small></td><td>${esc(r.appPhone)}</td><td>${r.applicantType==='corp'?'法人':'個人'}</td><td>${esc(r.preferredArea)||'-'}</td><td>¥${Number(r.budgetMax||0).toLocaleString()}</td><td><span class="badge badge-${r.status}">${stL}</span></td><td><button class="btn-sm btn-view" onclick='showDetail(${JSON.stringify(r).replace(/'/g,"&#39;")})'>Xem</button> <button class="btn-sm btn-del" onclick="delReg(${r.id})">Xóa</button></td></tr>`;}).join('');}
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
+function showDetail(d){currentId=d.id;document.getElementById('modalTitle').textContent=`#${String(d.id).slice(-5)} - ${d.appName}`;
+let h=`<div class="detail-row"><strong>Ngày:</strong> ${d.created_at?new Date(d.created_at).toLocaleString('vi-VN'):'-'}</div>
+<div class="detail-row"><strong>Loại:</strong> ${d.applicantType==='corp'?'法人':'個人'} / ${d.propertyCategory}</div>
+<div class="detail-row"><strong>Khu vực:</strong> ${esc(d.preferredArea)}</div>
+<div class="detail-row"><strong>Ngân sách:</strong> ¥${d.budgetMin||0}〜¥${d.budgetMax||0}</div>
+<div class="detail-row"><strong>Chuyển vào:</strong> ${esc(d.moveInDate)}</div>
+<div class="detail-row"><strong>Họ tên:</strong> ${esc(d.appName)} (${esc(d.appKana)})</div>
+<div class="detail-row"><strong>SĐT:</strong> ${esc(d.appPhone)} / LINE: ${esc(d.appLine)||'-'}</div>
+<div class="detail-row"><strong>Email:</strong> ${esc(d.appEmail)}</div>
+<div class="detail-row"><strong>Quốc tịch/Visa:</strong> ${esc(d.appNationality)} / ${esc(d.appVisa)}</div>
+<div class="detail-row"><strong>Địa chỉ:</strong> ${esc(d.appAddress)}</div>
+<div class="detail-row"><strong>Công ty:</strong> ${esc(d.appCompany)} / ${esc(d.appJob)}</div>
+<div class="detail-row"><strong>Thu nhập:</strong> ¥${d.appIncome||0}</div>
+<div class="detail-row"><strong>Số người ở:</strong> ${d.numOccupants}</div>
+<div class="detail-row"><strong>Khẩn cấp:</strong> ${esc(d.emgName)} (${esc(d.emgPhone)}) / ${esc(d.emgEmail)||'-'} / DOB: ${esc(d.emgBirth)||'-'}</div>
+<div class="detail-row"><strong>Bảo lãnh:</strong> ${d.guarantorType} ${esc(d.guaName)||''} ${esc(d.guaCompanyName)||''}</div>
+<div class="detail-row"><strong>Giấy tờ:</strong> ${(d.documents||[]).join(', ')||'-'}</div>
+<div class="detail-row"><strong>Files:</strong> ${d.uploadedFiles?Object.keys(d.uploadedFiles).map(k=>d.uploadedFiles[k].name).join(', '):'-'}</div>
+<div class="detail-row"><strong>Ghi chú:</strong> ${esc(d.docNotes)||'-'}</div>`;
+document.getElementById('modalBody').innerHTML=h;document.getElementById('stSelect').value=d.status||'new';document.getElementById('adNote').value=d.admin_note||'';document.getElementById('detailModal').classList.add('show');}
+function closeModal(){document.getElementById('detailModal').classList.remove('show');}
+function saveStatus(){const list=getRegs();const i=list.findIndex(r=>r.id===currentId);if(i>=0){list[i].status=document.getElementById('stSelect').value;list[i].admin_note=document.getElementById('adNote').value;saveRegs(list);}closeModal();renderAdmin();}
+function delReg(id){if(!confirm('Xóa?'))return;saveRegs(getRegs().filter(r=>r.id!==id));renderAdmin();}
+function exportCSV(){const list=getRegs();if(!list.length){alert('No data');return;}const h=['ID','Date','Type','Name','Kana','Phone','Email','Nationality','Visa','Area','BudgetMax','MoveIn','Company','Income','Occupants','Emergency','GuarantorType','Status'];const rows=list.map(r=>[r.id,r.created_at,r.applicantType,r.appName,r.appKana,r.appPhone,r.appEmail,r.appNationality,r.appVisa,r.preferredArea,r.budgetMax,r.moveInDate,r.appCompany,r.appIncome,r.numOccupants,r.emgName,r.guarantorType,r.status].map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(','));const csv='\\uFEFF'+h.join(',')+'\\n'+rows.join('\\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=`applications_${new Date().toISOString().slice(0,10)}.csv`;a.click();}
+document.getElementById('detailModal').addEventListener('click',e=>{if(e.target.id==='detailModal')closeModal();});
+setLang(curLang);renderSteps();
+</script>
+</body>
+</html>
