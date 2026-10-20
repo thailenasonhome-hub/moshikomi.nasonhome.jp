@@ -280,6 +280,8 @@ details.archive .tablewrap{margin:12px 0 0}
 .yenin{display:flex;align-items:center;gap:6px}.yenin input{flex:1;min-width:0}.yenin span{color:#667}
 .reccode{font-size:1.5em!important;letter-spacing:.12em;text-align:center;font-weight:700}
 #forgotPage h2{font-size:1em;margin:18px 0 8px}
+.pwedit{display:flex;flex-direction:column;gap:4px;min-width:12em}.pwedit input{width:100%;max-width:16em}
+.pweditbtns{display:flex;gap:4px;flex-wrap:wrap}.pwedit .flash{margin:0;padding:6px 8px;font-size:.85em}
 
 </style>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -399,6 +401,7 @@ function errText(e) {
   if (/weak-password/i.test(c)) return 'パスワードは6文字以上にしてください / Mật khẩu tối thiểu 6 ký tự';
   if (/operation-not-allowed|admin-restricted/i.test(c)) return 'Firebase でメール/パスワード認証が無効です / Chưa bật đăng nhập Email/Password trong Firebase → Authentication → Sign-in method';
   if (/requires-recent-login/i.test(c)) return 'もう一度ログインしてから変更してください / Hãy đăng nhập lại rồi đổi';
+  if (/operation-not-supported-in-this-environment/i.test(c) && typeof location !== 'undefined' && location.protocol === 'file:') return 'ファイルを直接開いているためログインできません。GitHub のリンクから開いてください / Đang mở file trực tiếp trên máy nên không đăng nhập được — hãy mở bằng link GitHub';
   if (/web-storage-unsupported|operation-not-supported-in-this-environment|storage/i.test(c)) return 'ブラウザがCookie・ストレージを制限しています。通常モードのSafari / Chromeで開いてください / Trình duyệt đang chặn lưu trữ (chế độ riêng tư, chặn cookie hoặc trình duyệt trong app) — hãy mở link bằng Safari / Chrome ở chế độ thường';
   if (/network/i.test(c)) return 'ネットワークエラー / Lỗi mạng — kiểm tra kết nối';
   if (/PERMISSION_DENIED|permission/i.test(c)) return '権限がありません / Không có quyền (hoặc Rules Firebase chưa thiết lập)';
@@ -406,7 +409,7 @@ function errText(e) {
 }
 
 // ===================== Tiện ích + quy tắc nghiệp vụ =====================
-const VERSION = 'ver 2026.10.20-f17';
+const VERSION = 'ver 2026.10.20-f18';
 const LOGIN_URL_DEFAULT = 'https://thailenasonhome-hub.github.io/moshikomi.nasonhome.jp/dangnhaptkdoitac.html'; // link đăng nhập chính thức gửi đối tác (GitHub Pages)
 // Link đăng nhập gửi cho người dùng: nếu đang mở bằng địa chỉ https thật thì dùng chính địa chỉ đó (bỏ #… và ?…);
 // nếu mở bằng file:// / localhost / địa chỉ thử nghiệm thì dùng địa chỉ chính thức — để không bao giờ gửi đi 1 link chỉ chạy trên máy anh.
@@ -1166,7 +1169,7 @@ const S = {
   auth: null, me: null, booting: true, noAccess: null,
   catalog: {}, fees: {}, settings: {}, apps: {}, appadmin: {}, apptrash: {}, users: {}, useradmin: {}, chatApp: {}, chatDm: {}, reads: {}, audit: {},
   contracts: {}, contractArchive: {}, seal: null, rulesOld: false, vault: {}, vaultShow: {}, pendingPw: null,
-  ctvLinks: {}, ctvAll: {}, ctvPage: null, ctvLast: 0, pwAll: {}, recovery: null, recCode: null, recWarn: false, recovered: false,
+  ctvLinks: {}, ctvAll: {}, ctvPage: null, ctvLast: 0, pwAll: {}, pwEdit: null, recovery: null, recCode: null, recWarn: false, recovered: false,
   subErr: {}, readsAll: {}, popSeen: null, rcptSent: null, errSent: false, retryT: null, linkCheck: {},
   loaded: {}, subs: [], flash: null, dirty: false, pendingRender: false, tempCard: null, importPreview: null, setupName: '',
 };
@@ -1351,7 +1354,14 @@ function pwCell(u) {
   const v = (S.pwAll || {})[u.id];
   if (!v || typeof v.pw !== 'string') return '<small class="hint">未保管<br>Chưa có (đăng nhập lần tới sẽ tự lưu)</small>';
   const stale = vaultStale(u, v);
-  return `<div class="pwcell"><input readonly class="mono" id="pwl_${h(u.id)}" value="${h(v.pw)}" size="${Math.min(Math.max(v.pw.length, 6), 20)}" aria-label="password ${h(u.email)}" autocomplete="off" autocapitalize="none" spellcheck="false"><button type="button" class="btn small" data-copy-from="pwl_${h(u.id)}" title="コピー / Copy">📋</button>${vaultOk(u.id, u) ? `<button type="button" class="btn small" data-act="pwQuick" data-id="${h(u.id)}" data-confirm2 title="新しいパスワードを自動作成して設定 / Tạo MK mới và đặt ngay">🔐 再設定</button>` : ''}</div><small>${h(fmtTime(v.at))}${stale ? ' <span class="warn">⚠ メールで変更の可能性 / có thể đã đổi qua email</span>' : ''}</small>`;
+  // f18: đang sửa dòng này → ô gõ MK mới ngay trên danh sách (để trống = hệ thống tự tạo), bấm 💾 2 lần để chắc
+  if (S.pwEdit === u.id && vaultOk(u.id, u) && u.active !== false) {
+    return `<form class="pwedit" data-action="pwInline" data-id="${h(u.id)}" data-keep data-confirm autocomplete="off" novalidate>
+      <input name="password" class="mono" maxlength="64" placeholder="新しいMK / MK mới" aria-label="new password ${h(u.email)}" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
+      <div class="pweditbtns"><button class="btn small primary">💾 保存 / Lưu</button><button type="button" class="btn small" data-act="pwEditCancel">✕</button></div>
+      <small>6文字以上・空欄＝自動作成 / ≥ 6 ký tự · để trống = tự tạo<br>今: ${h(v.pw)}</small></form>`;
+  }
+  return `<div class="pwcell"><input readonly class="mono" id="pwl_${h(u.id)}" value="${h(v.pw)}" size="${Math.min(Math.max(v.pw.length, 6), 20)}" aria-label="password ${h(u.email)}" autocomplete="off" autocapitalize="none" spellcheck="false"><button type="button" class="btn small" data-copy-from="pwl_${h(u.id)}" title="コピー / Copy">📋</button>${vaultOk(u.id, u) && u.active !== false ? `<button type="button" class="btn small" data-act="pwEdit" data-id="${h(u.id)}" title="パスワードを変更 / Đổi mật khẩu">✏️ 変更</button>` : ''}</div><small>${h(fmtTime(v.at))}${stale ? ' <span class="warn">⚠ メールで変更の可能性 / có thể đã đổi qua email</span>' : ''}</small>`;
 }
 function refreshVault(id) { const b = document.getElementById('vaultBox'); if (b && b.dataset.id === id) b.innerHTML = vaultBox(id); }
 async function loadVault(id) {
@@ -1755,9 +1765,11 @@ const V = {
         <p><a href="#/">← ログインへ / Quay lại đăng nhập</a></p></div>`;
     }
     const em = String(email0 || '').slice(0, 120);
+    const env = (() => { try { if (location.protocol === 'file:') return 'file'; if (window.top !== window.self) return 'frame'; } catch (_) { return 'frame'; } return ''; })();
+    const envNote = env ? `<div class="flash error" id="envNote">⚠ ${env === 'file' ? 'ファイルを直接開いています' : 'プレビュー画面で開いています'}。この状態ではログインできません。GitHub のリンク（https://…github.io/…）から開いてください。<br><small>${env === 'file' ? 'Đang mở file trực tiếp trên máy' : 'Đang mở trong khung xem trước'} — Firebase không cho đăng nhập. Hãy mở bằng link GitHub (https://…github.io/…).</small></div>` : '';
     const inApp = inAppBrowser() ? `<div class="flash warn" id="inappnote">📱 アプリ内ブラウザで開いています。ログインできない場合は、右上の「…」から<b>「Safariで開く」／「ブラウザで開く」</b>を選んでください。<br><small>Đang mở trong trình duyệt của app (Zalo / LINE / Facebook…). Nếu không đăng nhập được: bấm dấu “…” góc trên → <b>Mở bằng Safari / Chrome</b>, hoặc copy link dán vào Safari / Chrome.</small></div>` : '';
     return `<div class="login card"><img src="${LOGO}" alt="NASON HOME"><h1>ログイン<small>Đăng nhập</small></h1>
-      <p class="hint">電気・ガス・光回線 申込システム<br>Hệ thống đăng ký Điện · Gas · Wifi</p>${inApp}
+      <p class="hint">電気・ガス・光回線 申込システム<br>Hệ thống đăng ký Điện · Gas · Wifi</p>${envNote}${inApp}
       <form class="form" data-action="login">
         <label class="field"><span>メールアドレス<small>Email đăng nhập</small></span><input name="email" type="email" required${em ? '' : ' autofocus'} autocomplete="username" autocapitalize="none" autocorrect="off" inputmode="email" spellcheck="false" value="${h(em)}"></label>
         <label class="field"><span>パスワード<small>Mật khẩu</small></span><input name="password" type="password" required${em ? ' autofocus' : ''} autocomplete="current-password" autocapitalize="none" autocorrect="off"></label>
@@ -2635,7 +2647,7 @@ function rewardUpdates(a, status, startedAt, cancelledAt, ov) {
 
 // ---- Đặt MK mới trong hệ thống (không email) — dùng chung cho thẻ 🔐 パスワード設定 và nút 🔐 再設定 ở danh sách ----
 // Trả '' khi xong (đã chuyển sang màn hình kết quả có MK mới + tin nhắn gửi), hoặc câu báo lỗi.
-async function pwSetCore(id, typed) {
+async function pwSetCore(id, typed, stay) {
   const u = S.users[id];
   if (!vaultOk(id, u) || u.active === false) return 'このアカウントには設定できません / Không đặt được cho tài khoản này';
   let cur = '';
@@ -2651,6 +2663,12 @@ async function pwSetCore(id, typed) {
   // Đã đổi MK thật → ghi kho + nhật ký. Lỗi ở bước này không được làm mất MK mới: vẫn hiện màn hình kết quả kèm cảnh báo.
   let warn = '';
   try { await B.update({ [`${P.pwvault}/${id}`]: { pw: next, at: B.TS, by: uid() }, ...audit('account_pw_set', u.email, typed ? 'manual' : 'auto') }); } catch (e) { warn = errText(e); }
+  if (stay) { // f18: đổi ngay trên danh sách → ở lại danh sách, cột tự hiện MK mới
+    S.pwEdit = null; S.dirty = false;
+    setFlash(warn ? 'error' : 'ok', warn ? 'パスワードは変更済みですが、記録の保存に失敗しました / Đã đổi MK nhưng chưa ghi được vào kho: ' + warn : `パスワードを変更しました（${u.name}）：${next} / Đã đổi MK cho ${u.name}: ${next} — dùng được ngay`);
+    render();
+    return '';
+  }
   S.tempCard = { email: u.email, name: u.name, pw: next, role: u.role, reset: true, id, typed: !!typed };
   if (warn) setFlash('error', 'パスワードは変更済みですが、記録の保存に失敗しました / Đã đổi MK nhưng chưa ghi được vào kho / nhật ký: ' + warn);
   go('#/admin/accounts/created');
@@ -2765,6 +2783,17 @@ const ACTIONS = {
       setFlash('ok', 'パスワードを再設定しました。復旧コードは引き続き使えます / Đã đặt lại mật khẩu và đăng nhập. Mã khôi phục vẫn dùng tiếp được.');
       go('#/');
     } catch (e) { S.recovered = false; S.pendingPw = null; busy(form, false); formErrors(form, recErrText(e)); }
+  },
+  // f18: gõ MK mới ngay trên dòng ở アカウント管理 (để trống = tự tạo) → đổi thật ngay, không email / điện thoại, không cần người đó đăng nhập trước
+  async pwInline(form, fd) {
+    const typed = String(fd.get('password') || '').trim();
+    const errs = [];
+    if (typed && typed.length < 6) errs.push('6文字以上 / Tối thiểu 6 ký tự');
+    if (typed.length > 64) errs.push('64文字以内 / Tối đa 64 ký tự');
+    if (errs.length) return formErrors(form, errs);
+    busy(form, true);
+    const err = await pwSetCore(form.dataset.id, typed, true);
+    if (err) { busy(form, false); formErrors(form, err); }
   },
   // Quản trị lưu hoa hồng nhập tay cho 1 đối tác → dgw/users/<uid>/rates (đối tác chỉ đọc được của chính mình; không tự sửa được)
   async ratesSave(form, fd) {
@@ -3443,6 +3472,12 @@ Object.assign(CLICKS, {
     const err = await pwSetCore(btn.dataset.id, '');
     if (err) { setFlash('error', err); render(); }
   },
+  pwEdit(btn) {
+    S.pwEdit = btn.dataset.id; S.dirty = false; render();
+    const inp = document.querySelector('.pwedit input[name=password]');
+    if (inp) { try { inp.focus(); } catch (_) { /* bỏ qua */ } }
+  },
+  pwEditCancel() { S.pwEdit = null; S.dirty = false; render(); },
   // ----- Mã khôi phục -----
   recDone() { S.recCode = null; setFlash('ok', '復旧コードを設定しました / Đã tạo mã khôi phục.'); render(); },
   async recTrust() {
@@ -3847,7 +3882,7 @@ document.addEventListener('click', (e) => {
     return;
   }
   const tr = e.target.closest('tr[data-href]');
-  if (tr && !e.target.closest('a,button,input,select,textarea')) go(tr.dataset.href);
+  if (tr && !e.target.closest('a,button,input,select,textarea,form,.pwtd')) go(tr.dataset.href); // bấm vào ô mật khẩu không nhảy trang
 });
 document.addEventListener('input', (e) => { if (e.target.closest('form[data-keep]')) S.dirty = true; });
 document.addEventListener('keydown', (e) => {
@@ -3857,6 +3892,7 @@ window.addEventListener('hashchange', () => {
   if (S.flash && S.flash.at) S.flash = null;
   S.dirty = false;
   S.recCode = null; // mã khôi phục chỉ hiện 1 lần: rời trang là xoá khỏi bộ nhớ
+  S.pwEdit = null;
   if (S.tempCard && currentRoute().name !== 'accountCreated') S.tempCard = null; // mật khẩu vừa cấp chỉ hiện 1 lần: rời trang là xoá khỏi bộ nhớ
   render();
   window.scrollTo(0, 0);
