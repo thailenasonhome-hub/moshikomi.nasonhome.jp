@@ -268,6 +268,18 @@ details.archive .tablewrap{margin:12px 0 0}
 .lk.ok{background:#e6f6ec;color:#146c2e}.lk.warn{background:#fff4dc;color:#7a4e00}.lk.err{background:#fde8e8;color:#b42318}.lk.wait{background:#eef1f5;color:#556}
 #plink{font-size:.95em;word-break:break-all}
 @media(max-width:700px){input,select,textarea{font-size:16px !important}}
+/* Link CTV (f15) */
+.hp{position:absolute!important;left:-9999px;top:auto;width:1px;height:1px;opacity:0;overflow:hidden}
+.ctvhead{margin:20px 0 16px}.ctvhead h1{margin:0 0 8px}
+.ctvok{text-align:center}.ctvok h1{color:#1f7a3f}
+.ctvstate{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 10px}
+/* f16: cột mật khẩu + ô hoa hồng */
+.pwcell{display:flex;align-items:center;gap:4px}
+.pwcell input{width:auto;min-width:0;max-width:13em;border:0;background:transparent;padding:2px 0;font-size:1em;color:var(--ink)}
+.pwtd small{display:block}
+.yenin{display:flex;align-items:center;gap:6px}.yenin input{flex:1;min-width:0}.yenin span{color:#667}
+.reccode{font-size:1.5em!important;letter-spacing:.12em;text-align:center;font-weight:700}
+#forgotPage h2{font-size:1em;margin:18px 0 8px}
 
 </style>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -286,8 +298,8 @@ details.archive .tablewrap{margin:12px 0 0}
 'use strict';
 const LOGO = "data:image/png;base64,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";
 const CATALOG_SEED = [{"code":"DIEN-01","category":"denki","provider":"トクスルでんき","meigi":"日本人/法人","plan":"でんき","has_op":false,"conditions":"おとく生活（標準付帯）· 外国人・法人名義OK · 提供開始から6ヶ月以内の解約は報酬戻入\nGói おとく生活 đi kèm · KH người nước ngoài / pháp nhân OK · Huỷ trong 6 tháng từ ngày cấp điện → thu hồi hoa hồng","sort":10,"active":true},{"code":"DIEN-02","category":"denki","provider":"トクスルでんき","meigi":"外国人","plan":"でんき","has_op":false,"conditions":"おとく生活（標準付帯）· 外国人・法人名義OK · 提供開始から6ヶ月以内の解約は報酬戻入\nGói おとく生活 đi kèm · KH người nước ngoài / pháp nhân OK · Huỷ trong 6 tháng từ ngày cấp điện → thu hồi hoa hồng","sort":20,"active":true},{"code":"DIEN-03","category":"denki","provider":"アルカナおうちでんき","meigi":"日本人/法人","plan":"レ点OPなし（Không OP）","has_op":false,"conditions":"年齢18〜69歳 · オール電化・太陽光NG · 沖縄・一部離島は対象外 · 1年未満の解約はお客様に解約金22,000円\nKH 18–69 tuổi · nhà toàn điện / pin mặt trời NG · trừ Okinawa & một số đảo · KH huỷ < 1 năm chịu phí 22,000円","sort":30,"active":true,"age_min":18,"age_max":69},{"code":"DIEN-04","category":"denki","provider":"アルカナおうちでんき","meigi":"日本人/法人","plan":"レ点OPあり（Có OP）","has_op":false,"conditions":"年齢18〜69歳 · オール電化・太陽光NG · 沖縄・一部離島は対象外 · 1年未満の解約はお客様に解約金22,000円\nKH 18–69 tuổi · nhà toàn điện / pin mặt trời NG · trừ Okinawa & một số đảo · KH huỷ < 1 năm chịu phí 22,000円","sort":40,"active":true,"age_min":18,"age_max":69},{"code":"DIEN-05","category":"denki","provider":"アルカナおうちでんき","meigi":"外国人","plan":"レ点OPなし（Không OP）","has_op":false,"conditions":"年齢18〜69歳 · オール電化・太陽光NG · 沖縄・一部離島は対象外 · 1年未満の解約はお客様に解約金22,000円\nKH 18–69 tuổi · nhà toàn điện / pin mặt trời NG · trừ Okinawa & một số đảo · KH huỷ < 1 năm chịu phí 22,000円","sort":50,"active":true,"age_min":18,"age_max":69},{"code":"DIEN-06","category":"denki","provider":"アルカナおうちでんき","meigi":"外国人","plan":"レ点OPあり（Có OP）","has_op":false,"conditions":"年齢18〜69歳 · オール電化・太陽光NG · 沖縄・一部離島は対象外 · 1年未満の解約はお客様に解約金22,000円\nKH 18–69 tuổi · nhà toàn điện / pin mặt trời NG · trừ Okinawa & một số đảo · KH huỷ < 1 năm chịu phí 22,000円","sort":60,"active":true,"age_min":18,"age_max":69},{"code":"DIEN-07","category":"denki","provider":"新日本エネルギー","meigi":"日本人/法人","plan":"ネクストゼロプラン","has_op":false,"conditions":"年齢18〜74歳 · 外国人名義OK（日本語が話せる方）· 法人名義OK · 契約切替（OSW）NG → 新規入居（再点）のみ · 再点：当日OK · 支払方法：カード／口座／コンビニ（7回目から440円/回）· 6ヶ月以内の解約は報酬戻入100%\nKH 18–74 tuổi · Người nước ngoài OK (nói được tiếng Nhật) · Pháp nhân OK · KHÔNG nhận đổi hợp đồng (OSW) → chỉ KH mới chuyển vào · Mở điện trong ngày · Thanh toán thẻ / tài khoản / cửa hàng tiện lợi (từ lần 7 phí 440円) · Huỷ trong 6 tháng → thu hồi 100%","sort":62,"active":true,"age_min":18,"age_max":74,"no_switch":true},{"code":"DIEN-08","category":"denki","provider":"新日本エネルギー","meigi":"外国人","plan":"ネクストゼロプラン","has_op":false,"conditions":"年齢18〜74歳 · 外国人名義OK（日本語が話せる方）· 法人名義OK · 契約切替（OSW）NG → 新規入居（再点）のみ · 再点：当日OK · 支払方法：カード／口座／コンビニ（7回目から440円/回）· 6ヶ月以内の解約は報酬戻入100%\nKH 18–74 tuổi · Người nước ngoài OK (nói được tiếng Nhật) · Pháp nhân OK · KHÔNG nhận đổi hợp đồng (OSW) → chỉ KH mới chuyển vào · Mở điện trong ngày · Thanh toán thẻ / tài khoản / cửa hàng tiện lợi (từ lần 7 phí 440円) · Huỷ trong 6 tháng → thu hồi 100%","sort":64,"active":true,"age_min":18,"age_max":74,"no_switch":true},{"code":"GAS-01","category":"gas","provider":"東京ガス","meigi":"日本人/法人/外国人","plan":"都市ガス","has_op":false,"conditions":"外国人名義OK（日本語が通じる方）· 再点：最短翌営業日（土日祝除く）· 戻入なし\nKH nước ngoài OK (nói được tiếng Nhật) · Mở gas sớm nhất ngày làm việc kế tiếp (trừ T7, CN, lễ) · Không thu hồi hoa hồng","sort":70,"active":true},{"code":"GAS-02","category":"gas","provider":"トクスル都市ガス","meigi":"日本人/法人/外国人","plan":"大阪ガス エリア","has_op":false,"conditions":"外国人・法人名義OK · 提供開始から6ヶ月以内の解約は報酬戻入\nKH người nước ngoài / pháp nhân OK · Huỷ trong 6 tháng → thu hồi hoa hồng","sort":80,"active":true},{"code":"GAS-03","category":"gas","provider":"ガスワン","meigi":"全名義（要確認）","plan":"都市ガスハッピープラン · 集合：分譲マンション（1LDK以上）","has_op":false,"conditions":"都市ガス · 建物タイプにより販売手数料が変動（実績額で精算）\nGas thành phố · Hoa hồng thay đổi theo loại nhà (tính theo số thực tế)","sort":82,"active":true},{"code":"GAS-04","category":"gas","provider":"ガスワン","meigi":"全名義（要確認）","plan":"都市ガスハッピープラン · 集合：マンション（2K以上 ※要確認）","has_op":false,"conditions":"都市ガス · 建物タイプにより販売手数料が変動（実績額で精算）\nGas thành phố · Hoa hồng thay đổi theo loại nhà (tính theo số thực tế)","sort":84,"active":true},{"code":"GAS-05","category":"gas","provider":"ガスワン","meigi":"全名義（要確認）","plan":"都市ガスハッピープラン · 集合：マンション（1K／1R／1LDK）","has_op":false,"conditions":"都市ガス · 建物タイプにより販売手数料が変動（実績額で精算）\nGas thành phố · Hoa hồng thay đổi theo loại nhà (tính theo số thực tế)","sort":86,"active":true},{"code":"GAS-06","category":"gas","provider":"ガスワン","meigi":"全名義（要確認）","plan":"都市ガスハッピープラン · 戸建（共通）","has_op":false,"conditions":"都市ガス · 建物タイプにより販売手数料が変動（実績額で精算）\nGas thành phố · Hoa hồng thay đổi theo loại nhà (tính theo số thực tế)","sort":88,"active":true},{"code":"WIFI-01","category":"hikari","provider":"コミュファ光","meigi":"日本人/法人","plan":"新規 1G","has_op":false,"conditions":"新規のみ（1G / 10G）· ファミリー・マンション共通 · 外国人名義OK（別単価）\nChỉ lắp mới (1G / 10G) · nhà riêng & chung cư như nhau · KH người nước ngoài OK (giá riêng)","sort":90,"active":true},{"code":"WIFI-02","category":"hikari","provider":"コミュファ光","meigi":"日本人/法人","plan":"新規 10G","has_op":false,"conditions":"新規のみ（1G / 10G）· ファミリー・マンション共通 · 外国人名義OK（別単価）\nChỉ lắp mới (1G / 10G) · nhà riêng & chung cư như nhau · KH người nước ngoài OK (giá riêng)","sort":100,"active":true},{"code":"WIFI-03","category":"hikari","provider":"コミュファ光","meigi":"外国人","plan":"新規 1G","has_op":false,"conditions":"新規のみ（1G / 10G）· ファミリー・マンション共通 · 外国人名義OK（別単価）\nChỉ lắp mới (1G / 10G) · nhà riêng & chung cư như nhau · KH người nước ngoài OK (giá riêng)","sort":110,"active":true},{"code":"WIFI-04","category":"hikari","provider":"コミュファ光","meigi":"外国人","plan":"新規 10G","has_op":false,"conditions":"新規のみ（1G / 10G）· ファミリー・マンション共通 · 外国人名義OK（別単価）\nChỉ lắp mới (1G / 10G) · nhà riêng & chung cư như nhau · KH người nước ngoài OK (giá riêng)","sort":120,"active":true},{"code":"WIFI-05","category":"hikari","provider":"ドコモ光","meigi":"日本人/法人","plan":"新規 (1G/10G)","has_op":false,"conditions":"訪問販売NG（不動産アライアンス／紹介案件のみ）· 新規：携帯キャリア指定なし · 転用／事業者変更：お客様がドコモ携帯ユーザーであること · 外国籍名義OK · 法人名義OK（ドコモ携帯ユーザーに限る）· 戻入なし\nKhông bán đến tận nhà (chỉ khách giới thiệu / liên kết BĐS) · Lắp mới: không cần dùng ĐT docomo · Chuyển / đổi nhà mạng: KH phải đang dùng ĐT docomo · Người nước ngoài OK · Pháp nhân OK (phải dùng ĐT docomo) · Không thu hồi","sort":130,"active":true},{"code":"WIFI-06","category":"hikari","provider":"ドコモ光","meigi":"日本人/法人","plan":"転用/事変","has_op":false,"conditions":"訪問販売NG（不動産アライアンス／紹介案件のみ）· 新規：携帯キャリア指定なし · 転用／事業者変更：お客様がドコモ携帯ユーザーであること · 外国籍名義OK · 法人名義OK（ドコモ携帯ユーザーに限る）· 戻入なし\nKhông bán đến tận nhà (chỉ khách giới thiệu / liên kết BĐS) · Lắp mới: không cần dùng ĐT docomo · Chuyển / đổi nhà mạng: KH phải đang dùng ĐT docomo · Người nước ngoài OK · Pháp nhân OK (phải dùng ĐT docomo) · Không thu hồi","sort":140,"active":true},{"code":"WIFI-07","category":"hikari","provider":"ドコモ光","meigi":"外国人","plan":"新規 (1G/10G)","has_op":false,"conditions":"訪問販売NG（不動産アライアンス／紹介案件のみ）· 新規：携帯キャリア指定なし · 転用／事業者変更：お客様がドコモ携帯ユーザーであること · 外国籍名義OK · 法人名義OK（ドコモ携帯ユーザーに限る）· 戻入なし\nKhông bán đến tận nhà (chỉ khách giới thiệu / liên kết BĐS) · Lắp mới: không cần dùng ĐT docomo · Chuyển / đổi nhà mạng: KH phải đang dùng ĐT docomo · Người nước ngoài OK · Pháp nhân OK (phải dùng ĐT docomo) · Không thu hồi","sort":150,"active":true},{"code":"WIFI-08","category":"hikari","provider":"ドコモ光","meigi":"外国人","plan":"転用/事変","has_op":false,"conditions":"訪問販売NG（不動産アライアンス／紹介案件のみ）· 新規：携帯キャリア指定なし · 転用／事業者変更：お客様がドコモ携帯ユーザーであること · 外国籍名義OK · 法人名義OK（ドコモ携帯ユーザーに限る）· 戻入なし\nKhông bán đến tận nhà (chỉ khách giới thiệu / liên kết BĐS) · Lắp mới: không cần dùng ĐT docomo · Chuyển / đổi nhà mạng: KH phải đang dùng ĐT docomo · Người nước ngoài OK · Pháp nhân OK (phải dùng ĐT docomo) · Không thu hồi","sort":160,"active":true},{"code":"WIFI-09","category":"hikari","provider":"ソフトバンク光","meigi":"日本人","plan":"新規 (1G/10G)","has_op":true,"conditions":"日本人名義（外国人は事前確認）· みなし法人OK · レ点OP：wifiマル・ホワ電・BB基ブ・でんわ · 6ヶ月以内の解約は報酬戻入\nDanh nghĩa người Nhật (người nước ngoài hỏi trước) · Có レ点OP · Huỷ trong 6 tháng → thu hồi","sort":170,"active":true},{"code":"WIFI-10","category":"hikari","provider":"ソフトバンク光","meigi":"日本人","plan":"転用/事変","has_op":true,"conditions":"日本人名義（外国人は事前確認）· みなし法人OK · レ点OP：wifiマル・ホワ電・BB基ブ・でんわ · 6ヶ月以内の解約は報酬戻入\nDanh nghĩa người Nhật (người nước ngoài hỏi trước) · Có レ点OP · Huỷ trong 6 tháng → thu hồi","sort":180,"active":true},{"code":"WIFI-11","category":"hikari","provider":"ソフトバンクAir","meigi":"日本人","plan":"新規","has_op":true,"conditions":"日本人名義（外国人は事前確認）· Air「レンタル」は報酬対象外 · レ点OP：BB基ブ・でんわ · 6ヶ月以内の解約は報酬戻入\nDanh nghĩa người Nhật · Air dạng 「レンタル」 không có hoa hồng · Huỷ trong 6 tháng → thu hồi","sort":190,"active":true},{"code":"WIFI-12","category":"hikari","provider":"@nifty光(auひかり)","meigi":"日本人","plan":"CBなし (S000009331) · ホームずっとギガ得/マンション","has_op":false,"conditions":"外国人名義は原則NG · 法人名義NG · KDDIのauひかり（So-net／Biglobe）とは別商品 · 開通から6ヶ月以内の解約は報酬戻入\nKH người nước ngoài về nguyên tắc NG · pháp nhân NG · KHÁC auひかり của KDDI · Huỷ trong 6 tháng → thu hồi","sort":200,"active":true},{"code":"WIFI-13","category":"hikari","provider":"@nifty光(auひかり)","meigi":"日本人","plan":"CBなし (S000009331) · ギガ得/標準","has_op":false,"conditions":"外国人名義は原則NG · 法人名義NG · KDDIのauひかり（So-net／Biglobe）とは別商品 · 開通から6ヶ月以内の解約は報酬戻入\nKH người nước ngoài về nguyên tắc NG · pháp nhân NG · KHÁC auひかり của KDDI · Huỷ trong 6 tháng → thu hồi","sort":210,"active":true},{"code":"WIFI-14","category":"hikari","provider":"@nifty光(auひかり)","meigi":"日本人","plan":"10,000円CB (S000009348) · ホームずっとギガ得/マンション","has_op":false,"conditions":"外国人名義は原則NG · 法人名義NG · KDDIのauひかり（So-net／Biglobe）とは別商品 · 開通から6ヶ月以内の解約は報酬戻入\nKH người nước ngoài về nguyên tắc NG · pháp nhân NG · KHÁC auひかり của KDDI · Huỷ trong 6 tháng → thu hồi","sort":220,"active":true},{"code":"WIFI-15","category":"hikari","provider":"@nifty光(auひかり)","meigi":"日本人","plan":"10,000円CB (S000009348) · ギガ得/標準","has_op":false,"conditions":"外国人名義は原則NG · 法人名義NG · KDDIのauひかり（So-net／Biglobe）とは別商品 · 開通から6ヶ月以内の解約は報酬戻入\nKH người nước ngoài về nguyên tắc NG · pháp nhân NG · KHÁC auひかり của KDDI · Huỷ trong 6 tháng → thu hồi","sort":230,"active":true},{"code":"WIFI-16","category":"hikari","provider":"@nifty光(auひかり)","meigi":"日本人","plan":"5ヶ月2,000円割引+CBなし (S000010740) · ホームずっとギガ得 マンション","has_op":false,"conditions":"外国人名義は原則NG · 法人名義NG · KDDIのauひかり（So-net／Biglobe）とは別商品 · 開通から6ヶ月以内の解約は報酬戻入\nKH người nước ngoài về nguyên tắc NG · pháp nhân NG · KHÁC auひかり của KDDI · Huỷ trong 6 tháng → thu hồi","sort":240,"active":true},{"code":"WIFI-17","category":"hikari","provider":"@nifty光(auひかり)","meigi":"日本人","plan":"5ヶ月2,000円割引+10,000円CB (S000010757) · ホームずっとギガ得 マンション","has_op":false,"conditions":"外国人名義は原則NG · 法人名義NG · KDDIのauひかり（So-net／Biglobe）とは別商品 · 開通から6ヶ月以内の解約は報酬戻入\nKH người nước ngoài về nguyên tắc NG · pháp nhân NG · KHÁC auひかり của KDDI · Huỷ trong 6 tháng → thu hồi","sort":250,"active":true},{"code":"WIFI-18","category":"hikari","provider":"@nifty光(auひかり)","meigi":"外国人(原則NG)","plan":"CBなし (S000009331) · ホームずっとギガ得/マンション","has_op":false,"conditions":"外国人名義は原則NG · 法人名義NG · KDDIのauひかり（So-net／Biglobe）とは別商品 · 開通から6ヶ月以内の解約は報酬戻入\nKH người nước ngoài về nguyên tắc NG · pháp nhân NG · KHÁC auひかり của KDDI · Huỷ trong 6 tháng → thu hồi","sort":260,"active":true},{"code":"WIFI-19","category":"hikari","provider":"@nifty光(auひかり)","meigi":"外国人(原則NG)","plan":"CBなし (S000009331) · ギガ得/標準","has_op":false,"conditions":"外国人名義は原則NG · 法人名義NG · KDDIのauひかり（So-net／Biglobe）とは別商品 · 開通から6ヶ月以内の解約は報酬戻入\nKH người nước ngoài về nguyên tắc NG · pháp nhân NG · KHÁC auひかり của KDDI · Huỷ trong 6 tháng → thu hồi","sort":270,"active":true},{"code":"WIFI-20","category":"hikari","provider":"@nifty光(auひかり)","meigi":"外国人(原則NG)","plan":"10,000円CB (S000009348) · ホームずっとギガ得/マンション","has_op":false,"conditions":"外国人名義は原則NG · 法人名義NG · KDDIのauひかり（So-net／Biglobe）とは別商品 · 開通から6ヶ月以内の解約は報酬戻入\nKH người nước ngoài về nguyên tắc NG · pháp nhân NG · KHÁC auひかり của KDDI · Huỷ trong 6 tháng → thu hồi","sort":280,"active":true},{"code":"WIFI-21","category":"hikari","provider":"@nifty光(auひかり)","meigi":"外国人(原則NG)","plan":"10,000円CB (S000009348) · ギガ得/標準","has_op":false,"conditions":"外国人名義は原則NG · 法人名義NG · KDDIのauひかり（So-net／Biglobe）とは別商品 · 開通から6ヶ月以内の解約は報酬戻入\nKH người nước ngoài về nguyên tắc NG · pháp nhân NG · KHÁC auひかり của KDDI · Huỷ trong 6 tháng → thu hồi","sort":290,"active":true},{"code":"WIFI-22","category":"hikari","provider":"@nifty光(auひかり)","meigi":"外国人(原則NG)","plan":"5ヶ月2,000円割引+CBなし (S000010740) · ホームずっとギガ得 マンション","has_op":false,"conditions":"外国人名義は原則NG · 法人名義NG · KDDIのauひかり（So-net／Biglobe）とは別商品 · 開通から6ヶ月以内の解約は報酬戻入\nKH người nước ngoài về nguyên tắc NG · pháp nhân NG · KHÁC auひかり của KDDI · Huỷ trong 6 tháng → thu hồi","sort":300,"active":true},{"code":"WIFI-23","category":"hikari","provider":"@nifty光(auひかり)","meigi":"外国人(原則NG)","plan":"5ヶ月2,000円割引+10,000円CB (S000010757) · ホームずっとギガ得 マンション","has_op":false,"conditions":"外国人名義は原則NG · 法人名義NG · KDDIのauひかり（So-net／Biglobe）とは別商品 · 開通から6ヶ月以内の解約は報酬戻入\nKH người nước ngoài về nguyên tắc NG · pháp nhân NG · KHÁC auひかり của KDDI · Huỷ trong 6 tháng → thu hồi","sort":310,"active":true},{"code":"WIFI-24","category":"hikari","provider":"NURO光","meigi":"日本人","plan":"戸建 · 新規（初月無料）","has_op":false,"conditions":"新規のみ · 初月無料 · 戸建／集合（2.5G）で単価が異なります\nChỉ lắp mới · Tháng đầu miễn phí · Giá khác nhau giữa nhà riêng / chung cư (2.5G)","sort":320,"active":true},{"code":"WIFI-25","category":"hikari","provider":"NURO光","meigi":"外国人","plan":"戸建 · 新規（初月無料）","has_op":false,"conditions":"新規のみ · 初月無料 · 戸建／集合（2.5G）で単価が異なります\nChỉ lắp mới · Tháng đầu miễn phí · Giá khác nhau giữa nhà riêng / chung cư (2.5G)","sort":330,"active":true},{"code":"WIFI-26","category":"hikari","provider":"NURO光","meigi":"日本人","plan":"集合 · 新規（初月無料・2.5G）","has_op":false,"conditions":"新規のみ · 初月無料 · 戸建／集合（2.5G）で単価が異なります\nChỉ lắp mới · Tháng đầu miễn phí · Giá khác nhau giữa nhà riêng / chung cư (2.5G)","sort":340,"active":true},{"code":"WIFI-27","category":"hikari","provider":"NURO光","meigi":"外国人","plan":"集合 · 新規（初月無料・2.5G）","has_op":false,"conditions":"新規のみ · 初月無料 · 戸建／集合（2.5G）で単価が異なります\nChỉ lắp mới · Tháng đầu miễn phí · Giá khác nhau giữa nhà riêng / chung cư (2.5G)","sort":350,"active":true},{"code":"WIFI-28","category":"hikari","provider":"ソフトバンク光（販路4）","meigi":"外国人","plan":"新規（回線のみ・オプションなし）","has_op":false,"sort":360,"active":true,"ng_vn":true,"conditions":"外国人名義・新規のみ · 回線のみ（オプションなし）· ベトナム国籍の方は取次NG · 6ヶ月以内の解約は報酬戻入\nChỉ KH người nước ngoài, lắp mới · Chỉ đường truyền (không OP) · KHÔNG nhận KH quốc tịch Việt Nam · Huỷ trong 6 tháng → thu hồi hoa hồng"}];
-const RULES_TEMPLATE = "\"dgw\": {\n  \".read\": \"(auth != null && (auth.uid === '__OWNER_UID__' || (root.child('dgw/users/' + auth.uid).child('role').val() === 'kanri' && root.child('dgw/users/' + auth.uid).child('active').val() === true)))\",\n  \".write\": \"(auth != null && (auth.uid === '__OWNER_UID__' || (root.child('dgw/users/' + auth.uid).child('role').val() === 'kanri' && root.child('dgw/users/' + auth.uid).child('active').val() === true)))\",\n  \"users\": {\n    \"$uid\": {\n      \".read\": \"auth != null && auth.uid === $uid\",\n      \"name\": {\n        \".write\": \"auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n        \".validate\": \"newData.isString() && newData.val().length > 0 && newData.val().length <= 60\"\n      },\n      \"phone\": {\n        \".write\": \"auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n        \".validate\": \"newData.isString() && newData.val().length <= 30\"\n      },\n      \"bank\": {\n        \".write\": \"auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n        \"$f\": {\n          \".validate\": \"newData.isString() && newData.val().length <= 60\"\n        }\n      },\n      \"must_change_pw\": {\n        \".write\": \"auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true) && newData.val() === false\"\n      }\n    }\n  },\n  \"catalog\": {\n    \".read\": \"(auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\"\n  },\n  \"counters\": {\n    \"$day\": {\n      \".read\": \"(auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n      \".write\": \"(auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n      \".validate\": \"newData.isNumber() && newData.val() === (data.exists() ? data.val() : 0) + 1\"\n    }\n  },\n  \"apps\": {\n    \"$owner\": {\n      \".read\": \"auth != null && auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n      \"$app\": {\n        \"form\": {\n          \".write\": \"auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true) && (!data.parent().child('state').exists() || data.parent().child('state/status').val() === 'received' || data.parent().child('state/status').val() === 'incomplete') && newData.parent().child('state/status').val() === 'received'\",\n          \".validate\": \"newData.hasChildren(['category', 'product', 'meigi_type', 'cust_name', 'phone', 'address']) && newData.child('cust_name').val().length <= 80\"\n        },\n        \"state\": {\n          \".write\": \"auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true) && newData.child('owner').val() === $owner && newData.child('started_at').val() === data.child('started_at').val() && newData.child('cancelled_at').val() === data.child('cancelled_at').val() && newData.child('incomplete_reason').val() === data.child('incomplete_reason').val() && newData.child('reward_amount').val() === data.child('reward_amount').val() && newData.child('reward_stock').val() === data.child('reward_stock').val() && newData.child('reward_pending').val() === data.child('reward_pending').val() && newData.child('reward_role').val() === data.child('reward_role').val() && newData.child('clawback_amount').val() === data.child('clawback_amount').val() && (!data.exists() || (newData.child('app_no').val() === data.child('app_no').val() && newData.child('applied_at').val() === data.child('applied_at').val())) && ((!data.exists() && newData.child('status').val() === 'received') || (data.child('status').val() === 'received' && (newData.child('status').val() === 'received' || newData.child('status').val() === 'cancelled')) || (data.child('status').val() === 'incomplete' && newData.child('status').val() === 'received'))\",\n          \".validate\": \"newData.hasChildren(['status', 'owner', 'app_no', 'applied_at']) && (newData.child('status').val() === 'received' || newData.child('status').val() === 'processing' || newData.child('status').val() === 'incomplete' || newData.child('status').val() === 'done' || newData.child('status').val() === 'cancelled' || newData.child('status').val() === 'clawback')\"\n        },\n        \"history\": {\n          \"$h\": {\n            \".write\": \"!data.exists() && auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n            \".validate\": \"newData.child('by').val() === auth.uid && newData.child('at').val() === now && newData.child('name').val() === root.child('dgw/users/' + auth.uid).child('name').val()\"\n          }\n        }\n      }\n    }\n  },\n  \"chat\": {\n    \"app\": {\n      \"$owner\": {\n        \".read\": \"auth != null && auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n        \"$app\": {\n          \"$m\": {\n            \".write\": \"!data.exists() && auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true) && root.child('dgw/apps/' + $owner + '/' + $app + '/state').exists()\",\n            \".validate\": \"newData.child('by').val() === auth.uid && newData.child('at').val() === now && newData.child('name').val() === root.child('dgw/users/' + auth.uid).child('name').val() && newData.child('body').isString() && newData.child('body').val().length > 0 && newData.child('body').val().length <= 2000 && (((newData.child('side').val() === 'user' || newData.child('side').val() === 'system') && auth.uid === $owner) || ((newData.child('side').val() === 'admin' || newData.child('side').val() === 'system') && (auth != null && (auth.uid === '__OWNER_UID__' || (root.child('dgw/users/' + auth.uid).child('role').val() === 'kanri' && root.child('dgw/users/' + auth.uid).child('active').val() === true)))))\"\n          }\n        }\n      }\n    },\n    \"dm\": {\n      \"$owner\": {\n        \".read\": \"auth != null && auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n        \"$m\": {\n          \".write\": \"!data.exists() && auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n          \".validate\": \"newData.child('by').val() === auth.uid && newData.child('at').val() === now && newData.child('name').val() === root.child('dgw/users/' + auth.uid).child('name').val() && newData.child('body').isString() && newData.child('body').val().length > 0 && newData.child('body').val().length <= 2000 && ((newData.child('side').val() === 'user' && auth.uid === $owner) || (newData.child('side').val() === 'admin' && (auth != null && (auth.uid === '__OWNER_UID__' || (root.child('dgw/users/' + auth.uid).child('role').val() === 'kanri' && root.child('dgw/users/' + auth.uid).child('active').val() === true)))))\"\n        }\n      }\n    }\n  },\n  \"pwvault\": {\n    \"$uid\": {\n      \".write\": \"auth != null && auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true) && root.child('dgw/users/' + auth.uid).child('role').val() !== 'kanri'\",\n      \".validate\": \"newData.hasChildren(['pw', 'at', 'by'])\",\n      \"pw\": {\n        \".validate\": \"newData.isString() && newData.val().length >= 6 && newData.val().length <= 64\"\n      },\n      \"at\": {\n        \".validate\": \"newData.val() === now\"\n      },\n      \"by\": {\n        \".validate\": \"newData.val() === auth.uid\"\n      },\n      \"$other\": {\n        \".validate\": false\n      }\n    }\n  },\n  \"contracts\": {\n    \"$uid\": {\n      \".read\": \"auth != null && auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n      \"status\": {\n        \".write\": \"auth != null && auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true) && data.val() === 'sent' && newData.val() === 'signed' && newData.parent().child('sign/at').val() === now\",\n        \".validate\": \"newData.val() === 'sent' || newData.val() === 'signed' || newData.val() === 'concluded'\"\n      },\n      \"sign\": {\n        \".write\": \"auth != null && auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true) && !data.exists() && data.parent().child('status').val() === 'sent' && newData.parent().child('status').val() === 'signed'\",\n        \".validate\": \"newData.hasChildren(['at', 'by', 'name', 'img', 'agree'])\",\n        \"at\": {\n          \".validate\": \"newData.val() === now\"\n        },\n        \"by\": {\n          \".validate\": \"newData.val() === $uid\"\n        },\n        \"name\": {\n          \".validate\": \"newData.isString() && newData.val().length > 0 && newData.val().length <= 60\"\n        },\n        \"agree\": {\n          \".validate\": \"newData.val() === true\"\n        },\n        \"img\": {\n          \".validate\": \"newData.isString() && newData.val().beginsWith('data:image/png;base64,') && newData.val().length <= 300000\"\n        },\n        \"$other\": {\n          \".validate\": false\n        }\n      }\n    }\n  },\n  \"contract_archive\": {\n    \"$uid\": {\n      \".read\": \"auth != null && auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\"\n    }\n  },\n  \"rules_v3\": {\n    \".validate\": false\n  },\n  \"reads\": {\n    \"$uid\": {\n      \".read\": \"auth != null && auth.uid === $uid\",\n      \".write\": \"auth != null && auth.uid === $uid\"\n    }\n  },\n  \"audit\": {\n    \"$a\": {\n      \".write\": \"!data.exists() && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n      \".validate\": \"newData.child('by').val() === auth.uid && newData.child('at').val() === now && newData.child('action').isString()\"\n    }\n  }\n}";
-const RULES_VERSION = 3;
+const RULES_TEMPLATE = "\"dgw\": {\n  \".read\": \"(auth != null && (auth.uid === '__OWNER_UID__' || (root.child('dgw/users/' + auth.uid).child('role').val() === 'kanri' && root.child('dgw/users/' + auth.uid).child('active').val() === true)))\",\n  \".write\": \"(auth != null && (auth.uid === '__OWNER_UID__' || (root.child('dgw/users/' + auth.uid).child('role').val() === 'kanri' && root.child('dgw/users/' + auth.uid).child('active').val() === true)))\",\n  \"users\": {\n    \"$uid\": {\n      \".read\": \"auth != null && auth.uid === $uid\",\n      \"name\": {\n        \".write\": \"auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n        \".validate\": \"newData.isString() && newData.val().length > 0 && newData.val().length <= 60\"\n      },\n      \"phone\": {\n        \".write\": \"auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n        \".validate\": \"newData.isString() && newData.val().length <= 30\"\n      },\n      \"bank\": {\n        \".write\": \"auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n        \"$f\": {\n          \".validate\": \"newData.isString() && newData.val().length <= 60\"\n        }\n      },\n      \"must_change_pw\": {\n        \".write\": \"auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true) && newData.val() === false\"\n      }\n    }\n  },\n  \"catalog\": {\n    \".read\": true\n  },\n  \"ctv\": {\n    \"$owner\": {\n      \".read\": \"auth != null && auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n      \".write\": \"auth != null && auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n      \"$token\": {\n        \".read\": true,\n        \".validate\": \"newData.hasChildren(['on', 'name', 'at']) && $token.matches(/^[a-z0-9]{24}$/)\",\n        \"on\": {\n          \".validate\": \"newData.isBoolean()\"\n        },\n        \"name\": {\n          \".validate\": \"newData.isString() && newData.val().length > 0 && newData.val().length <= 60\"\n        },\n        \"at\": {\n          \".validate\": \"newData.isNumber()\"\n        },\n        \"$other\": {\n          \".validate\": false\n        }\n      }\n    }\n  },\n  \"counters\": {\n    \"$day\": {\n      \".read\": \"(auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n      \".write\": \"(auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n      \".validate\": \"newData.isNumber() && newData.val() === (data.exists() ? data.val() : 0) + 1\"\n    }\n  },\n  \"apps\": {\n    \"$owner\": {\n      \".read\": \"auth != null && auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n      \"$app\": {\n        \"form\": {\n          \".write\": \"(auth != null && auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true) && (!data.parent().child('state').exists() || data.parent().child('state/status').val() === 'received' || data.parent().child('state/status').val() === 'incomplete') && newData.parent().child('state/status').val() === 'received') || (!data.parent().exists() && newData.parent().child('ctv/token').isString() && newData.parent().child('ctv/token').val().matches(/^[a-z0-9]{24}$/) && root.child('dgw/ctv/' + $owner + '/' + newData.parent().child('ctv/token').val() + '/on').val() === true && newData.parent().child('state/status').val() === 'received' && newData.parent().child('state/owner').val() === $owner)\",\n          \".validate\": \"newData.hasChildren(['category', 'product', 'meigi_type', 'cust_name', 'phone', 'address']) && newData.child('cust_name').val().length <= 80\",\n          \"category\": {\n            \".validate\": \"newData.isString() && newData.val().length <= 10\"\n          },\n          \"product\": {\n            \".validate\": \"newData.isString() && newData.val().length <= 30\"\n          },\n          \"product_label\": {\n            \".validate\": \"newData.isString() && newData.val().length <= 300\"\n          },\n          \"meigi_type\": {\n            \".validate\": \"newData.isString() && newData.val().length <= 10\"\n          },\n          \"cust_name\": {\n            \".validate\": \"newData.isString() && newData.val().length <= 80\"\n          },\n          \"cust_kana\": {\n            \".validate\": \"newData.isString() && newData.val().length <= 80\"\n          },\n          \"company_name\": {\n            \".validate\": \"newData.isString() && newData.val().length <= 120\"\n          },\n          \"birth_date\": {\n            \".validate\": \"newData.isString() && newData.val().length <= 10\"\n          },\n          \"phone\": {\n            \".validate\": \"newData.isString() && newData.val().length <= 30\"\n          },\n          \"email\": {\n            \".validate\": \"newData.isString() && newData.val().length <= 120\"\n          },\n          \"postal\": {\n            \".validate\": \"newData.isString() && newData.val().length <= 10\"\n          },\n          \"address\": {\n            \".validate\": \"newData.isString() && newData.val().length <= 200\"\n          },\n          \"building\": {\n            \".validate\": \"newData.isString() && newData.val().length <= 120\"\n          },\n          \"note\": {\n            \".validate\": \"newData.isString() && newData.val().length <= 2000\"\n          },\n          \"details\": {\n            \"$d\": {\n              \".validate\": \"newData.isString() && newData.val().length <= 120\"\n            }\n          },\n          \"$other\": {\n            \".validate\": \"newData.isBoolean() || (newData.isString() && newData.val().length <= 300)\"\n          }\n        },\n        \"ctv\": {\n          \".write\": \"!data.parent().exists() && newData.child('token').isString() && newData.child('token').val().matches(/^[a-z0-9]{24}$/) && root.child('dgw/ctv/' + $owner + '/' + newData.child('token').val() + '/on').val() === true && newData.parent().child('form').exists() && newData.parent().child('state/status').val() === 'received'\",\n          \".validate\": \"newData.hasChildren(['token', 'name']) && newData.child('token').val().matches(/^[a-z0-9]{24}$/)\",\n          \"token\": {\n            \".validate\": \"newData.isString()\"\n          },\n          \"name\": {\n            \".validate\": \"newData.isString() && newData.val().length > 0 && newData.val().length <= 60\"\n          },\n          \"phone\": {\n            \".validate\": \"newData.isString() && newData.val().length <= 30\"\n          },\n          \"$other\": {\n            \".validate\": false\n          }\n        },\n        \"state\": {\n          \".write\": \"(auth != null && auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true) && newData.child('owner').val() === $owner && newData.child('started_at').val() === data.child('started_at').val() && newData.child('cancelled_at').val() === data.child('cancelled_at').val() && newData.child('incomplete_reason').val() === data.child('incomplete_reason').val() && newData.child('reward_amount').val() === data.child('reward_amount').val() && newData.child('reward_stock').val() === data.child('reward_stock').val() && newData.child('reward_pending').val() === data.child('reward_pending').val() && newData.child('reward_role').val() === data.child('reward_role').val() && newData.child('clawback_amount').val() === data.child('clawback_amount').val() && (!data.exists() || (newData.child('app_no').val() === data.child('app_no').val() && newData.child('applied_at').val() === data.child('applied_at').val())) && ((!data.exists() && newData.child('status').val() === 'received') || (data.child('status').val() === 'received' && (newData.child('status').val() === 'received' || newData.child('status').val() === 'cancelled')) || (data.child('status').val() === 'incomplete' && newData.child('status').val() === 'received'))) || (!data.parent().exists() && newData.parent().child('ctv/token').isString() && newData.parent().child('ctv/token').val().matches(/^[a-z0-9]{24}$/) && root.child('dgw/ctv/' + $owner + '/' + newData.parent().child('ctv/token').val() + '/on').val() === true && newData.child('status').val() === 'received' && newData.child('owner').val() === $owner && newData.child('app_no').isString() && newData.child('app_no').val().matches(/^NH[0-9]{6}-C[0-9A-Z]{4,6}$/) && newData.child('applied_at').isString() && newData.child('applied_at').val().matches(/^20[0-9]{2}-[0-9]{2}-[0-9]{2}$/) && newData.child('updated_at').val() === now && !newData.child('started_at').exists() && !newData.child('cancelled_at').exists() && !newData.child('incomplete_reason').exists() && !newData.child('reward_role').exists() && !newData.child('reward_amount').exists() && !newData.child('reward_stock').exists() && !newData.child('reward_pending').exists() && !newData.child('clawback_amount').exists() && newData.parent().child('form').exists())\",\n          \".validate\": \"newData.hasChildren(['status', 'owner', 'app_no', 'applied_at']) && (newData.child('status').val() === 'received' || newData.child('status').val() === 'processing' || newData.child('status').val() === 'incomplete' || newData.child('status').val() === 'done' || newData.child('status').val() === 'cancelled' || newData.child('status').val() === 'clawback')\"\n        },\n        \"history\": {\n          \"$h\": {\n            \".write\": \"(!data.exists() && auth != null && auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)) || (!data.exists() && !data.parent().parent().exists() && newData.parent().parent().child('ctv/token').isString() && newData.parent().parent().child('ctv/token').val().matches(/^[a-z0-9]{24}$/) && root.child('dgw/ctv/' + $owner + '/' + newData.parent().parent().child('ctv/token').val() + '/on').val() === true)\",\n            \".validate\": \"(newData.child('by').val() === 'ctv' && newData.child('at').val() === now && newData.child('to').val() === 'received' && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 80 && (!newData.child('comment').exists() || (newData.child('comment').isString() && newData.child('comment').val().length <= 200))) || (auth != null && newData.child('by').val() === auth.uid && newData.child('at').val() === now && newData.child('name').val() === root.child('dgw/users/' + auth.uid).child('name').val())\"\n          }\n        }\n      }\n    }\n  },\n  \"chat\": {\n    \"app\": {\n      \"$owner\": {\n        \".read\": \"auth != null && auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n        \"$app\": {\n          \"$m\": {\n            \".write\": \"!data.exists() && auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true) && root.child('dgw/apps/' + $owner + '/' + $app + '/state').exists()\",\n            \".validate\": \"newData.child('by').val() === auth.uid && newData.child('at').val() === now && newData.child('name').val() === root.child('dgw/users/' + auth.uid).child('name').val() && newData.child('body').isString() && newData.child('body').val().length > 0 && newData.child('body').val().length <= 2000 && (((newData.child('side').val() === 'user' || newData.child('side').val() === 'system') && auth.uid === $owner) || ((newData.child('side').val() === 'admin' || newData.child('side').val() === 'system') && (auth != null && (auth.uid === '__OWNER_UID__' || (root.child('dgw/users/' + auth.uid).child('role').val() === 'kanri' && root.child('dgw/users/' + auth.uid).child('active').val() === true)))))\"\n          }\n        }\n      }\n    },\n    \"dm\": {\n      \"$owner\": {\n        \".read\": \"auth != null && auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n        \"$m\": {\n          \".write\": \"!data.exists() && auth.uid === $owner && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n          \".validate\": \"newData.child('by').val() === auth.uid && newData.child('at').val() === now && newData.child('name').val() === root.child('dgw/users/' + auth.uid).child('name').val() && newData.child('body').isString() && newData.child('body').val().length > 0 && newData.child('body').val().length <= 2000 && ((newData.child('side').val() === 'user' && auth.uid === $owner) || (newData.child('side').val() === 'admin' && (auth != null && (auth.uid === '__OWNER_UID__' || (root.child('dgw/users/' + auth.uid).child('role').val() === 'kanri' && root.child('dgw/users/' + auth.uid).child('active').val() === true)))))\"\n        }\n      }\n    }\n  },\n  \"pwvault\": {\n    \"$uid\": {\n      \".write\": \"auth != null && auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true) && root.child('dgw/users/' + auth.uid).child('role').val() !== 'kanri'\",\n      \".validate\": \"newData.hasChildren(['pw', 'at', 'by'])\",\n      \"pw\": {\n        \".validate\": \"newData.isString() && newData.val().length >= 6 && newData.val().length <= 64\"\n      },\n      \"at\": {\n        \".validate\": \"newData.val() === now\"\n      },\n      \"by\": {\n        \".validate\": \"newData.val() === auth.uid\"\n      },\n      \"$other\": {\n        \".validate\": false\n      }\n    }\n  },\n  \"recovery\": {\n    \".read\": true,\n    \".validate\": \"newData.hasChildren(['pub', 'epriv', 'salt', 'iv', 'iter', 'ctpw', 'at', 'setup_at'])\",\n    \"pub\": {\n      \".validate\": \"newData.isString() && newData.val().length <= 800\"\n    },\n    \"epriv\": {\n      \".validate\": \"newData.isString() && newData.val().length <= 3000\"\n    },\n    \"salt\": {\n      \".validate\": \"newData.isString() && newData.val().length <= 64\"\n    },\n    \"iv\": {\n      \".validate\": \"newData.isString() && newData.val().length <= 64\"\n    },\n    \"iter\": {\n      \".validate\": \"newData.isNumber() && newData.val() >= 100000\"\n    },\n    \"ctpw\": {\n      \".validate\": \"newData.isString() && newData.val().length <= 600\"\n    },\n    \"at\": {\n      \".validate\": \"newData.isNumber()\"\n    },\n    \"setup_at\": {\n      \".validate\": \"newData.isNumber()\"\n    },\n    \"$other\": {\n      \".validate\": false\n    }\n  },\n  \"contracts\": {\n    \"$uid\": {\n      \".read\": \"auth != null && auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n      \"status\": {\n        \".write\": \"auth != null && auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true) && data.val() === 'sent' && newData.val() === 'signed' && newData.parent().child('sign/at').val() === now\",\n        \".validate\": \"newData.val() === 'sent' || newData.val() === 'signed' || newData.val() === 'concluded'\"\n      },\n      \"sign\": {\n        \".write\": \"auth != null && auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true) && !data.exists() && data.parent().child('status').val() === 'sent' && newData.parent().child('status').val() === 'signed'\",\n        \".validate\": \"newData.hasChildren(['at', 'by', 'name', 'img', 'agree'])\",\n        \"at\": {\n          \".validate\": \"newData.val() === now\"\n        },\n        \"by\": {\n          \".validate\": \"newData.val() === $uid\"\n        },\n        \"name\": {\n          \".validate\": \"newData.isString() && newData.val().length > 0 && newData.val().length <= 60\"\n        },\n        \"agree\": {\n          \".validate\": \"newData.val() === true\"\n        },\n        \"img\": {\n          \".validate\": \"newData.isString() && newData.val().beginsWith('data:image/png;base64,') && newData.val().length <= 300000\"\n        },\n        \"$other\": {\n          \".validate\": false\n        }\n      }\n    }\n  },\n  \"contract_archive\": {\n    \"$uid\": {\n      \".read\": \"auth != null && auth.uid === $uid && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\"\n    }\n  },\n  \"rules_v5\": {\n    \".validate\": false\n  },\n  \"reads\": {\n    \"$uid\": {\n      \".read\": \"auth != null && auth.uid === $uid\",\n      \".write\": \"auth != null && auth.uid === $uid\"\n    }\n  },\n  \"audit\": {\n    \"$a\": {\n      \".write\": \"!data.exists() && (auth != null && root.child('dgw/users/' + auth.uid).child('active').val() === true)\",\n      \".validate\": \"newData.child('by').val() === auth.uid && newData.child('at').val() === now && newData.child('action').isString()\"\n    }\n  }\n}";
+const RULES_VERSION = 5;
 // ===================== Kết nối Firebase (dự án nason-home có sẵn) =====================
 // Dùng app Firebase tên riêng "dgw" để KHÔNG đụng phiên đăng nhập đồng bộ của app Lương trong hub.
 const FB_CONFIG = {
@@ -330,6 +342,13 @@ function firebaseBackend() {
       } finally { try { await sec.auth().signOut(); } catch (_) { /* bỏ qua */ } }
     },
     sendReset(email) { return auth.sendPasswordResetEmail(email); },
+    // Kiểm tra MK đúng không (đăng nhập ngầm ở app phụ, không đụng phiên đang dùng)
+    async verifyPassword(email, pw) {
+      const sec = firebase.apps.find((a) => a.name === 'dgw-create') || firebase.initializeApp(FB_CONFIG, 'dgw-create');
+      await sec.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+      try { await sec.auth().signInWithEmailAndPassword(email, pw); } finally { try { await sec.auth().signOut(); } catch (_) { /* bỏ qua */ } }
+      return true;
+    },
     async changePassword(current, next) {
       const u = auth.currentUser;
       const cred = firebase.auth.EmailAuthProvider.credential(u.email, current);
@@ -350,6 +369,20 @@ function firebaseBackend() {
       });
     },
     newKey(path) { return db.ref(path).push().key; },
+    // Kết nối KHÔNG đăng nhập (app Firebase riêng "dgw-pub", phiên riêng — không dính tài khoản đang đăng nhập): dành cho trang link CTV.
+    // Chỉ đọc đúng 1 nút link + danh mục gói, và TẠO MỚI 1 đơn — Rules v4 chặn mọi thứ khác.
+    pub: (() => {
+      let pdb = null;
+      const dbp = () => {
+        if (!pdb) pdb = (firebase.apps.find((a) => a.name === 'dgw-pub') || firebase.initializeApp(FB_CONFIG, 'dgw-pub')).database();
+        return pdb;
+      };
+      return {
+        get(path) { return dbp().ref(path).once('value').then((s) => s.val()); },
+        update(map) { return dbp().ref().update(map); },
+        newKey(path) { return dbp().ref(path).push().key; },
+      };
+    })(),
   };
 }
 
@@ -373,8 +406,8 @@ function errText(e) {
 }
 
 // ===================== Tiện ích + quy tắc nghiệp vụ =====================
-const VERSION = 'ver 2026.10.20-f14';
-const LOGIN_URL_DEFAULT = 'https://thailenasonhome-hub.github.io/NASON-HOME-/dangnhaptkdoitac.html'; // link đăng nhập chính thức gửi đối tác (GitHub Pages)
+const VERSION = 'ver 2026.10.20-f17';
+const LOGIN_URL_DEFAULT = 'https://thailenasonhome-hub.github.io/moshikomi.nasonhome.jp/dangnhaptkdoitac.html'; // link đăng nhập chính thức gửi đối tác (GitHub Pages)
 // Link đăng nhập gửi cho người dùng: nếu đang mở bằng địa chỉ https thật thì dùng chính địa chỉ đó (bỏ #… và ?…);
 // nếu mở bằng file:// / localhost / địa chỉ thử nghiệm thì dùng địa chỉ chính thức — để không bao giờ gửi đi 1 link chỉ chạy trên máy anh.
 function loginUrl(loc) {
@@ -391,6 +424,82 @@ function loginUrl(loc) {
 // Link đăng nhập RIÊNG cho 1 người: link sạch (chỉ chữ ASCII) + email điền sẵn nằm sau dấu # (không bao giờ gửi lên máy chủ).
 // Mất phần sau # (một số app chat cắt) thì vẫn mở được trang đăng nhập, chỉ không điền sẵn email.
 function loginLinkFor(email, loc) { return loginUrl(loc) + (email ? '#/?email=' + encodeURIComponent(email) : ''); }
+// ---- Link CTV (f15): đối tác gửi cho cộng tác viên để điền 新規申込 KHÔNG cần đăng nhập ----
+// Mã bí mật nằm sau dấu # (không bao giờ gửi lên máy chủ GitHub / không vào Referer). Mã = 24 ký tự a-z0-9 sinh bằng bộ ngẫu nhiên của trình duyệt (~124 bit).
+// ---- Hoa hồng nhập tay theo từng đối tác (f16): chỉ lưu + hiển thị, KHÔNG dùng để tự tính tiền ----
+const RATE_CATS = ['denki', 'gas', 'set', 'hikari'];
+// '7,000' / '７０００円' / '¥7000' → 7000 · trống → null · sai → NaN
+function parseRate(v) {
+  const s = String(v == null ? '' : v).replace(/[０-９]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/[,，、.¥￥円\s]/g, '');
+  if (!s) return null;
+  if (!/^\d{1,8}$/.test(s)) return NaN;
+  return Number(s);
+}
+// ---- Mã khôi phục tài khoản tổng (f17) — quên MK mà không cần email ----
+// Firebase chỉ cho đổi MK khi biết MK hiện tại → lưu MK ở dạng MÃ HOÁ: khoá công khai RSA mã hoá MK (mỗi lần đăng nhập / đổi MK),
+// khoá riêng bị khoá bằng mã khôi phục 12 ký tự (PBKDF2 310.000 vòng + AES-GCM). Mã chỉ hiện 1 lần cho chủ tài khoản, không lưu ở đâu.
+const REC_ALPHA = '23456789ABCDEFGHJKMNPQRSTUVWXYZ'; // bỏ 0 O 1 I L cho khỏi nhầm
+const REC_ITER = 310000;
+const normRecCode = (s) => String(s || '').toUpperCase().replace(/[^0-9A-Z]/g, '');
+const fmtRecCode = (c) => (normRecCode(c).match(/.{1,4}/g) || []).join('-');
+const b64e = (buf) => { const a = new Uint8Array(buf); let s = ''; for (let i = 0; i < a.length; i++) s += String.fromCharCode(a[i]); return btoa(s); };
+const b64d = (s) => Uint8Array.from(atob(String(s || '')), (c) => c.charCodeAt(0));
+function recSubtle() {
+  if (typeof crypto === 'undefined' || !crypto.subtle) throw Object.assign(new Error('crypto_unavailable'), { code: 'crypto_unavailable' });
+  return crypto.subtle;
+}
+async function recKey(code, salt, iter) {
+  const sb = recSubtle();
+  const base = await sb.importKey('raw', new TextEncoder().encode(normRecCode(code)), 'PBKDF2', false, ['deriveKey']);
+  return sb.deriveKey({ name: 'PBKDF2', salt, iterations: iter, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+}
+async function recEncryptPw(pubB64, pw) {
+  const bytes = new TextEncoder().encode(String(pw));
+  if (bytes.length > 190) throw Object.assign(new Error('rec_pw_too_long'), { code: 'rec_pw_too_long' });
+  const sb = recSubtle();
+  const pk = await sb.importKey('spki', b64d(pubB64), { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['encrypt']);
+  return b64e(await sb.encrypt({ name: 'RSA-OAEP' }, pk, bytes));
+}
+// Tạo bộ khôi phục mới cho MK pw → { code, rec } (rec chưa có at / setup_at)
+async function recCreate(pw) {
+  const sb = recSubtle();
+  const code = randomChars(12, REC_ALPHA);
+  const kp = await sb.generateKey({ name: 'RSA-OAEP', modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-256' }, true, ['encrypt', 'decrypt']);
+  const pub = b64e(await sb.exportKey('spki', kp.publicKey));
+  const priv = await sb.exportKey('pkcs8', kp.privateKey);
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await recKey(code, salt, REC_ITER);
+  const epriv = b64e(await sb.encrypt({ name: 'AES-GCM', iv }, key, priv));
+  return { code, rec: { pub, epriv, salt: b64e(salt), iv: b64e(iv), iter: REC_ITER, ctpw: await recEncryptPw(pub, pw) } };
+}
+// Giải MK hiện tại bằng mã khôi phục; sai mã → lỗi rec_bad_code
+async function recDecryptPw(rec, code) {
+  const sb = recSubtle();
+  let priv;
+  try {
+    const key = await recKey(code, b64d(rec.salt), rec.iter);
+    priv = await sb.decrypt({ name: 'AES-GCM', iv: b64d(rec.iv) }, key, b64d(rec.epriv));
+  } catch (e) { throw Object.assign(new Error('rec_bad_code'), { code: 'rec_bad_code' }); }
+  const pk = await sb.importKey('pkcs8', priv, { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']);
+  return new TextDecoder().decode(await sb.decrypt({ name: 'RSA-OAEP' }, pk, b64d(rec.ctpw)));
+}
+async function recFingerprint(pubB64) { return b64e(await recSubtle().digest('SHA-256', b64d(pubB64))); }
+const CTV_TOKEN_RE = /^[a-z0-9]{24}$/;
+function ctvLinkFor(owner, token, loc) { return loginUrl(loc) + '#/ctv/' + owner + '/' + token; }
+function randomChars(n, alphabet) {
+  const c = (typeof crypto !== 'undefined' && crypto.getRandomValues) ? crypto : null;
+  if (!c) throw new Error('crypto_unavailable');
+  const max = Math.floor(256 / alphabet.length) * alphabet.length; // bỏ giá trị lệch để mỗi ký tự đều xác suất như nhau
+  let out = '';
+  while (out.length < n) {
+    const buf = c.getRandomValues(new Uint8Array(n * 2));
+    for (let i = 0; i < buf.length && out.length < n; i++) if (buf[i] < max) out += alphabet[buf[i] % alphabet.length];
+  }
+  return out;
+}
+const newCtvToken = () => randomChars(24, 'abcdefghijklmnopqrstuvwxyz0123456789');
+const newCtvAppSuffix = () => randomChars(5, '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 // Trình duyệt TRONG app (Zalo / LINE / Facebook / Messenger / Instagram…): đôi khi chặn lưu đăng nhập → nên mở bằng Safari / Chrome
 function inAppBrowser(ua) { return /(FBAN|FBAV|FB_IAB|Instagram|Line\/|Zalo|MicroMessenger|KAKAOTALK|Snapchat|TikTok|musical_ly|Twitter)/i.test(ua == null ? (typeof navigator !== 'undefined' ? navigator.userAgent : '') : ua); }
 
@@ -531,6 +640,12 @@ const ACTION = {
   account_pw_issue: ['パスワード発行', 'Cấp mật khẩu mới (hiện trên màn hình)'],
   pwserver_update: ['発行サーバー設定', 'Đổi cấu hình máy chủ cấp MK'],
   pwvault_view: ['保管パスワード閲覧', 'Xem mật khẩu đã lưu'],
+  rates_update: ['報酬単価の設定', 'Đặt hoa hồng (nhập tay) cho đối tác'],
+  recovery_setup: ['復旧コード作成', 'Tạo mã khôi phục tài khoản tổng'],
+  owner_recover: ['復旧コードでパスワード再設定', 'Đặt lại MK tài khoản tổng bằng mã khôi phục'],
+  ctv_link_create: ['CTVリンク作成', 'Tạo link CTV'],
+  ctv_link_on: ['CTVリンク再開', 'Bật link CTV'],
+  ctv_link_off: ['CTVリンク停止', 'Tắt link CTV'],
   account_pw_set: ['パスワード設定', 'Quản trị đặt mật khẩu mới cho tài khoản'],
   account_disable: ['アカウント停止（アーカイブ）', 'Khoá → Lưu trữ'],
   account_enable: ['アカウント復元', 'Khôi phục tài khoản'],
@@ -1044,13 +1159,14 @@ function processSeal(file) {
 const P = {
   users: 'dgw/users', useradmin: 'dgw/useradmin', catalog: 'dgw/catalog', fees: 'dgw/fees', settings: 'dgw/settings',
   apps: 'dgw/apps', appadmin: 'dgw/appadmin', appTrash: 'dgw/apptrash', chatApp: 'dgw/chat/app', chatDm: 'dgw/chat/dm', reads: 'dgw/reads', audit: 'dgw/audit', counters: 'dgw/counters',
-  contracts: 'dgw/contracts', contractArchive: 'dgw/contract_archive', seal: 'dgw/seal', pwvault: 'dgw/pwvault', rulesProbe: `dgw/rules_v${RULES_VERSION}`,
+  contracts: 'dgw/contracts', contractArchive: 'dgw/contract_archive', seal: 'dgw/seal', pwvault: 'dgw/pwvault', ctv: 'dgw/ctv', recovery: 'dgw/recovery', rulesProbe: `dgw/rules_v${RULES_VERSION}`,
 };
 let B = null;
 const S = {
   auth: null, me: null, booting: true, noAccess: null,
   catalog: {}, fees: {}, settings: {}, apps: {}, appadmin: {}, apptrash: {}, users: {}, useradmin: {}, chatApp: {}, chatDm: {}, reads: {}, audit: {},
   contracts: {}, contractArchive: {}, seal: null, rulesOld: false, vault: {}, vaultShow: {}, pendingPw: null,
+  ctvLinks: {}, ctvAll: {}, ctvPage: null, ctvLast: 0, pwAll: {}, recovery: null, recCode: null, recWarn: false, recovered: false,
   subErr: {}, readsAll: {}, popSeen: null, rcptSent: null, errSent: false, retryT: null, linkCheck: {},
   loaded: {}, subs: [], flash: null, dirty: false, pendingRender: false, tempCard: null, importPreview: null, setupName: '',
 };
@@ -1168,11 +1284,15 @@ function subscribeData() {
     sub(P.contractArchive, 'contractArchive');
     sub(P.seal, 'seal');
     sub(P.reads, 'readsAll', false, onReadsAll);
+    sub(P.ctv, 'ctvAll');
+    sub(P.pwvault, 'pwAll', false, onPwAll);
+    if (S.me.is_owner) sub(P.recovery, 'recovery'); // trạng thái mã khôi phục (chỉ tài khoản tổng) // cột mật khẩu ở アカウント管理: tự cập nhật khi đối tác đổi MK / đăng nhập bằng MK mới
     checkRules();
   } else {
     sub(`${P.apps}/${me}`, 'apps', true);
     sub(`${P.chatApp}/${me}`, 'chatApp', true, onChat);
     sub(`${P.chatDm}/${me}`, 'chatDm', true, onChat);
+    sub(`${P.ctv}/${me}`, 'ctvLinks'); // link CTV của chính mình
     if (S.me.role === 'partner') {
       sub(`${P.contracts}/${me}`, 'contracts', true, onContractsChange);
       sub(`${P.contractArchive}/${me}`, 'contractArchive', true);
@@ -1182,12 +1302,15 @@ function subscribeData() {
 // ---- Kho mật khẩu (f10) ----
 // Đối tác / nhân viên vừa đăng nhập bằng MK nào thì ghi MK đó vào dgw/pwvault/<uid> (chỉ quản trị đọc được) → kho luôn khớp MK đang dùng,
 // kể cả sau khi đặt lại qua email hay với tài khoản tạo từ bản cũ. Lỗi (Rules cũ…) bỏ qua, không ảnh hưởng đăng nhập.
+// f17: quản trị phụ cũng được lưu (để tài khoản tổng đặt lại khi họ quên). Riêng tài khoản tổng KHÔNG lưu MK rõ — chỉ cập nhật bản mã hoá cho mã khôi phục.
 function syncVault() {
   const pw = S.pendingPw; S.pendingPw = null;
-  if (!pw || !S.me || S.me.role === 'kanri') return;
+  if (!pw || !S.me) return;
+  if (S.me.is_owner) { syncRecovery(pw); return; }
   B.update({ [`${P.pwvault}/${uid()}`]: { pw, at: B.TS, by: uid() } }).catch(() => {});
 }
-function vaultOk(id, u) { return isAdmin() && !!u && id !== uid() && !u.is_owner && u.role !== 'kanri'; }
+// Ai được xem kho / đặt lại MK cho người khác: quản trị → đối tác + nhân viên; riêng quản trị phụ thì chỉ tài khoản tổng đặt lại. Tài khoản tổng: dùng mã khôi phục.
+function vaultOk(id, u) { return isAdmin() && !!u && id !== uid() && !u.is_owner && (u.role !== 'kanri' || !!(S.me && S.me.is_owner)); }
 function vaultStale(u, v) {
   return Object.values(S.audit || {}).some((a) => a && a.target === u.email && (a.action === 'account_reset_pw' || a.action === 'password_change') && a.at > v.at);
 }
@@ -1200,7 +1323,7 @@ function vaultBox(id) {
   if (st === 'error') return `<div class="flash error">読み込めません / Không đọc được mật khẩu đã lưu. ${reload}</div>`;
   if (!st) {
     return `<p>まだ保管されたパスワードはありません。<small>Chưa có mật khẩu nào được lưu cho tài khoản này.</small></p>
-      <p class="hint">この人が次にログインするか、パスワードを変更すると自動で保管されます（Rules を最新版にしておくこと）。それまでは「パスワード再設定メール」をお使いください。<br>Tài khoản tạo từ bản cũ: MK sẽ tự được lưu ở lần đăng nhập / đổi MK kế tiếp của họ (cần đã dán Rules mới). Trong lúc chờ có thể dùng nút 「パスワード再設定メール」.</p>${reload}`;
+      <p class="hint">この人が次にログインするか、パスワードを変更すると自動で保管されます（Rules を最新版にしておくこと）。この人がパスワードを忘れた場合は再設定できません（新しいアカウントを作成してください）。<br>Tài khoản tạo từ bản cũ: MK sẽ tự được lưu ở lần đăng nhập / đổi MK kế tiếp của họ (cần đã dán Rules mới). Nếu người này đã quên MK thì không đặt lại trong hệ thống được (tạo tài khoản mới cho họ).</p>${reload}`;
   }
   const show = !!S.vaultShow[id];
   const who = v0 => (v0.by === id ? '本人 / chính người dùng' : h(userName(v0.by)));
@@ -1210,6 +1333,25 @@ function vaultBox(id) {
     ${stale ? '<div class="flash warn">⚠ 保管後にパスワード変更／再設定メール送信の記録があります。この内容は古い可能性があります。<br><small>Sau lần lưu này có ghi nhận đổi MK / gửi email đặt lại MK — MK ở đây có thể đã cũ; sẽ tự cập nhật khi người dùng đăng nhập lần tới.</small></div>' : ''}
     ${show ? `<details class="vaultmsg"><summary>📨 ログイン案内を作る<small>Tạo tin nhắn gửi lại cho người dùng (link + email + MK)</small></summary>${V.loginBlock({ email: u.email, pw: st.pw, role: u.role })}</details>` : '<p class="hint">「表示」を押すとパスワードが見えます（閲覧は操作ログに記録されます）。<br>Bấm 「表示」 để xem MK (lượt xem được ghi vào nhật ký).</p>'}
     <div class="actions">${reload}</div>`;
+}
+// Kho MK thay đổi (đối tác đổi MK, đăng nhập bằng MK mới, quản trị đặt MK) → khung 保管パスワード đang mở cũng cập nhật theo
+function onPwAll() {
+  for (const id of Object.keys(S.vault || {})) {
+    const st = S.vault[id];
+    if (!st || typeof st !== 'object') continue;
+    const v = (S.pwAll || {})[id];
+    if (!v || v.pw !== st.pw || v.at !== st.at) { S.vault[id] = v && typeof v.pw === 'string' ? v : null; refreshVault(id); }
+  }
+  scheduleRender();
+}
+// Ô mật khẩu trong danh sách tài khoản (lấy từ kho dgw/pwvault — đúng MK người đó dùng lần gần nhất)
+function pwCell(u) {
+  if (u.is_owner) return S.me && S.me.is_owner ? `<small class="${S.recovery && S.recovery.pub ? 'bank' : 'bank none'}">🛟 ${S.recovery && S.recovery.pub ? '復旧コード設定済 / Đã có mã khôi phục' : '<a href="#/account">復旧コード未設定 / Chưa có mã khôi phục →</a>'}</small>` : '<span class="hint">—</span>';
+  if (u.role === 'kanri' && !(S.me && S.me.is_owner)) return '<span class="hint">—</span>';
+  const v = (S.pwAll || {})[u.id];
+  if (!v || typeof v.pw !== 'string') return '<small class="hint">未保管<br>Chưa có (đăng nhập lần tới sẽ tự lưu)</small>';
+  const stale = vaultStale(u, v);
+  return `<div class="pwcell"><input readonly class="mono" id="pwl_${h(u.id)}" value="${h(v.pw)}" size="${Math.min(Math.max(v.pw.length, 6), 20)}" aria-label="password ${h(u.email)}" autocomplete="off" autocapitalize="none" spellcheck="false"><button type="button" class="btn small" data-copy-from="pwl_${h(u.id)}" title="コピー / Copy">📋</button>${vaultOk(u.id, u) ? `<button type="button" class="btn small" data-act="pwQuick" data-id="${h(u.id)}" data-confirm2 title="新しいパスワードを自動作成して設定 / Tạo MK mới và đặt ngay">🔐 再設定</button>` : ''}</div><small>${h(fmtTime(v.at))}${stale ? ' <span class="warn">⚠ メールで変更の可能性 / có thể đã đổi qua email</span>' : ''}</small>`;
 }
 function refreshVault(id) { const b = document.getElementById('vaultBox'); if (b && b.dataset.id === id) b.innerHTML = vaultBox(id); }
 async function loadVault(id) {
@@ -1288,6 +1430,7 @@ async function loadProfile(user) {
   S.me = null; S.noAccess = null;
   S.catalog = {}; S.fees = {}; S.settings = {}; S.apps = {}; S.appadmin = {}; S.apptrash = {}; S.users = {}; S.useradmin = {}; S.chatApp = {}; S.chatDm = {}; S.reads = {}; S.audit = {}; S.loaded = {};
   S.contracts = {}; S.contractArchive = {}; S.seal = null; S.rulesOld = false; S.tempCard = null; S.vault = {}; S.vaultShow = {};
+  S.ctvLinks = {}; S.ctvAll = {}; S.pwAll = {}; S.recovery = null; S.recCode = null; S.recWarn = false; // đổi tài khoản → không để lại dữ liệu của người trước
   S.subErr = {}; S.readsAll = {}; S.popSeen = null; S.rcptSent = null; S.errSent = false; S.blockedSig = ''; S.linkCheck = {};
   unsubscribeAll();
   if (!user) { S.pendingPw = null; S.booting = false; render(); return; }
@@ -1305,8 +1448,8 @@ async function loadProfile(user) {
 }
 
 // ---------- dữ liệu dẫn xuất ----------
-function catalogList() {
-  return Object.entries(S.catalog || {}).map(([code, c]) => ({ code, ...c })).sort((a, b) => (a.sort || 0) - (b.sort || 0) || a.code.localeCompare(b.code));
+function catalogList(src) {
+  return Object.entries(src || S.catalog || {}).map(([code, c]) => ({ code, ...c })).sort((a, b) => (a.sort || 0) - (b.sort || 0) || a.code.localeCompare(b.code));
 }
 function appList() {
   const out = [];
@@ -1314,7 +1457,7 @@ function appList() {
     for (const [id, a] of Object.entries(apps || {})) {
       if (!a || !a.state) continue;
       const ad = S.appadmin[id] || {};
-      out.push({ id, owner, form: a.form || {}, state: a.state, history: a.history || {}, company: ad.company_amount, admin_note: ad.admin_note, actual_fee: ad.actual_fee, actual_partner: ad.actual_partner });
+      out.push({ id, owner, form: a.form || {}, state: a.state, ctv: a.ctv || null, history: a.history || {}, company: ad.company_amount, admin_note: ad.admin_note, actual_fee: ad.actual_fee, actual_partner: ad.actual_partner });
     }
   }
   return out.sort((x, y) => String(y.state.app_no).localeCompare(String(x.state.app_no)));
@@ -1420,6 +1563,7 @@ function currentRoute() {
   else if (p === '/admin/contracts') r = { name: 'acontracts' };
   else if ((r = m(/^\/admin\/contracts\/([^/]+)$/))) r = { name: 'acontract', id: r[1] };
   else if (p === '/admin/rules') r = { name: 'arules' };
+  else if ((r = m(/^\/ctv\/([^/]+)\/([^/]+)$/))) r = { name: 'ctv', owner: r[1], token: r[2] };
   else r = { name: 'notfound' };
   r.q = q;
   r.path = p;
@@ -1457,12 +1601,12 @@ function renderHeader() {
   const r = currentRoute();
   let who = '<span class="who">株式会社NASON HOME</span>';
   let nav = '';
-  if (S.me) {
+  if (S.me && r.name !== 'ctv') {
     nav = `<nav>${navLinks().map(([p, jp, vi, names, extra]) => `<a href="#${p}"${names.includes(r.name) ? ' aria-current="page"' : ''}>${h(jp)}${extra || ''}<small>${h(vi)}</small></a>`).join('')}
       <button class="link" data-act="logout">ログアウト<small>Đăng xuất</small></button></nav>`;
   }
-  if (S.me) { const ro = ROLE[S.me.role] || ROLE.staff; who = `<a class="who" href="#/account">${h(S.me.name)}<small>${h(S.me.email || '')} · ${h(ro.jp)} / ${h(ro.vi)}</small></a>`; }
-  el.innerHTML = `<a class="brand" href="#/"><img src="${LOGO}" alt="NASON HOME"><span>電気・ガス・光回線 申込システム<small>Hệ thống đăng ký Điện · Gas · Wifi</small></span></a>${who}${nav}`;
+  if (S.me && r.name !== 'ctv') { const ro = ROLE[S.me.role] || ROLE.staff; who = `<a class="who" href="#/account">${h(S.me.name)}<small>${h(S.me.email || '')} · ${h(ro.jp)} / ${h(ro.vi)}</small></a>`; }
+  el.innerHTML = `<a class="brand" href="${r.name === 'ctv' ? '#' + h(r.path) : '#/'}"><img src="${LOGO}" alt="NASON HOME"><span>電気・ガス・光回線 申込システム<small>Hệ thống đăng ký Điện · Gas · Wifi</small></span></a>${who}${nav}`;
 }
 function flashHtml() {
   // Thông báo giữ khoảng 8 giây (không mất khi dữ liệu tự cập nhật vẽ lại màn hình); chuyển trang thì tắt
@@ -1487,6 +1631,7 @@ function render() {
     console.error(e);
     html = `<div class="card narrow center-card"><h1>エラー<small>Lỗi hiển thị</small></h1><p class="pre">${h(e && e.message)}</p></div>`;
   }
+  if (r.name === 'ctv') { main.innerHTML = flashHtml() + html; afterRender(r); return; } // trang CTV: không hiện thanh cảnh báo / hộp thoại của tài khoản
   const rulesWarn = isAdmin() && S.rulesOld && r.name !== 'arules' ? `<div class="flash error">⚠ Firebase の Rules が古い版です。契約書などの新機能を使うには Rules を貼り直してください。 <a class="btn small" href="#/admin/rules">更新手順 / Hướng dẫn</a><br><small>Firebase đang dùng Rules cũ — cần dán lại Rules mới để dùng hợp đồng & tính năng mới.</small></div>` : '';
   const bm = isPartner() && S.me ? bankMissing(S.me.bank) : [];
   const bankWarn = bm.length && !['account', 'password', 'setup'].includes(r.name) && S.auth ? `<div class="flash warn" id="bankBanner">💳 <b>報酬の振込先が未入力です</b>（不足：${h(bankJP(bm))}）。<a class="btn small primary" href="#/account">今すぐ入力 / Nhập ngay</a><br><small>Chưa nhập tài khoản nhận hoa hồng (còn thiếu: ${h(bankVI(bm))}). Lưu xong, thông tin tự động báo về NASON — không cần gửi riêng.</small></div>` : '';
@@ -1501,10 +1646,13 @@ function render() {
       <h2 id="cmTitle">📬 契約書が届きました<small>NASON đã gửi hợp đồng cho anh/chị</small></h2>
       <p>NASON HOME が商材取次契約書を発行しました${cw.kou_sign ? '（押印済）' : ''}。内容をご確認のうえ、<b>手書きで署名</b>してください。署名した時点で契約が成立します。<br><small>Hợp đồng môi giới${cw.kou_sign ? ' đã được NASON đóng dấu' : ''}. Anh/chị đọc nội dung rồi <b>ký tay</b> (bằng ngón tay hoặc chuột) — ký xong hợp đồng có hiệu lực.</small></p>
       <div class="actions"><a class="btn primary" id="cmSign" href="#/contract">✍ 今すぐ署名 / Xem &amp; ký ngay</a><button type="button" class="btn" data-act="popLater">後で / Để sau</button></div></div></div>` : '';
-  main.innerHTML = rulesWarn + blockWarn + cErr + contractWarn + bankWarn + flashHtml() + html + popup;
+  const recWarnB = S.me && S.me.is_owner && S.auth && r.name !== 'account' && ((S.loaded.recovery && !(S.recovery && S.recovery.pub)) || S.recWarn)
+    ? `<div class="flash warn" id="recBanner">🛟 ${S.recWarn ? '<b>復旧コードのデータが変更されました</b>。確認してください。' : '<b>復旧コードが未設定です</b>。パスワードを忘れたときのために作成してください。'} <a class="btn small" href="#/account">${S.recWarn ? '確認 / Kiểm tra' : '作成 / Tạo mã'}</a><br><small>${S.recWarn ? 'Dữ liệu mã khôi phục vừa bị thay đổi — vào kiểm tra.' : 'Tài khoản tổng chưa có mã khôi phục — tạo để lỡ quên MK vẫn tự đặt lại được (không cần email).'}</small></div>` : '';
+  main.innerHTML = rulesWarn + blockWarn + cErr + contractWarn + bankWarn + recWarnB + flashHtml() + html + popup;
   afterRender(r);
 }
 function viewFor(r) {
+  if (r.name === 'ctv') return V.ctv(r); // trang công khai cho CTV: không cần đăng nhập, không chờ dữ liệu của tài khoản
   if (S.booting) return '<div class="empty">読み込み中… / Đang tải…</div>';
   if (!S.auth) return r.name === 'setup' ? V.setupStart() : V.login(r.q.get('forgot') === '1', r.q.get('email'));
   if (r.name === 'setup') return V.setupRules();
@@ -1594,10 +1742,17 @@ const V = {
 
   login(forgot, email0) {
     if (forgot) {
-      return `<div class="login card"><img src="${LOGO}" alt="NASON HOME"><h1>パスワード再設定<small>Quên mật khẩu</small></h1>
-        <p class="hint">登録メールに再設定リンクを送ります。<br>Hệ thống gửi link đặt lại mật khẩu vào email đăng ký.</p>
-        <form class="form" data-action="forgot"><label class="field"><span>メール<small>Email</small></span><input name="email" type="email" required autocomplete="username" autocapitalize="none" autocorrect="off" inputmode="email" spellcheck="false" value="${h(email0 || '')}"></label>
-        <button class="btn primary">送信 / Gửi link</button></form><p><a href="#/">← ログインへ / Quay lại đăng nhập</a></p></div>`;
+      // f17: KHÔNG gửi email nữa — đặt lại ngay trong hệ thống
+      return `<div class="login card" id="forgotPage"><img src="${LOGO}" alt="NASON HOME"><h1>パスワード再設定<small>Quên mật khẩu</small></h1>
+        <div class="flash ok" id="forgotContact"><b>パートナー・社員の方</b>：NASON にご連絡ください。その場でシステム上で新しいパスワードを設定します（メール不要・すぐ使えます）。<br>📞 TEL 03-4500-6998
+          <br><small>Đối tác / nhân viên: liên hệ NASON (gọi điện / nhắn LINE) — NASON đặt mật khẩu mới ngay trên hệ thống, dùng được liền, không cần email.</small></div>
+        <form class="form" data-action="recover" id="recoverForm" autocomplete="off" novalidate><h2>🛟 管理者（オーナー）<small>Tài khoản tổng — dùng mã khôi phục</small></h2>
+          <label class="field"><span>メール<small>Email tài khoản tổng</small></span><input name="email" type="email" required autocomplete="username" autocapitalize="none" autocorrect="off" inputmode="email" spellcheck="false" value="${h(email0 || '')}"></label>
+          <label class="field"><span>復旧コード<small>Mã khôi phục (12 ký tự, vd K7QM-2XPA-9DRT)</small></span><input name="code" class="mono" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="20"></label>
+          <label class="field"><span>新しいパスワード<small>Mật khẩu mới (≥ 6 ký tự)</small></span><input name="password" type="password" required autocomplete="new-password" data-pwtoggle></label>
+          <label class="field"><span>新しいパスワード（確認）<small>Nhập lại mật khẩu mới</small></span><input name="password2" type="password" required autocomplete="new-password"></label>
+          <button class="btn primary">🔑 再設定してログイン / Đặt lại &amp; đăng nhập</button></form>
+        <p><a href="#/">← ログインへ / Quay lại đăng nhập</a></p></div>`;
     }
     const em = String(email0 || '').slice(0, 120);
     const inApp = inAppBrowser() ? `<div class="flash warn" id="inappnote">📱 アプリ内ブラウザで開いています。ログインできない場合は、右上の「…」から<b>「Safariで開く」／「ブラウザで開く」</b>を選んでください。<br><small>Đang mở trong trình duyệt của app (Zalo / LINE / Facebook…). Nếu không đăng nhập được: bấm dấu “…” góc trên → <b>Mở bằng Safari / Chrome</b>, hoặc copy link dán vào Safari / Chrome.</small></div>` : '';
@@ -1663,7 +1818,7 @@ const V = {
       const un = unreadCount(threadMsgs('app', a.owner, a.id), threadKey('app', a.owner, a.id));
       const u = S.users[a.owner] || {};
       return `<tr data-href="#/apps/${h(a.owner)}/${h(a.id)}">
-        <td><b>${h(s.app_no)}</b><small>${h(s.applied_at)}</small></td>
+        <td><b>${h(s.app_no)}</b>${a.ctv ? ` <span class="badge st-partner" title="${h('CTV: ' + a.ctv.name)}">CTV</span>` : ''}<small>${h(s.applied_at)}</small></td>
         <td>${catBadge(a.form.category)}</td>
         <td class="wrapcell">${h(a.form.product_label)}</td>
         <td>${h(a.form.cust_name)}<small>${h(meigiLabel(a.form.meigi_type))}</small></td>
@@ -1713,12 +1868,12 @@ const V = {
       <p class="hint">削除した申込はここに保管されます（完全削除はありません）。「復元」で元の一覧に戻り、状態・履歴・チャットもそのまま戻ります。報酬集計や担当者の画面には、削除中は表示されません。<br>Đơn đã xoá được giữ lại mãi tại đây. Bấm 復元 để đưa về danh sách cũ (giữ nguyên trạng thái, lịch sử, chat). Trong lúc ở mục này, đơn không tính vào 報酬集計 và người gửi không thấy.</p>`;
   },
 
-  apply(a, r) {
-    const admin = isAdmin();
+  apply(a, r, ctv) {
+    const admin = isAdmin() && !ctv;
     const editing = !!a;
     const d = editing ? { ...a.form, consent: true } : (S.draft || { category: CATEGORIES[r.q.get('cat')] ? r.q.get('cat') : '' });
     const cat = d.category || '';
-    const list = catalogList().filter((p) => p.active || (editing && p.code === a.form.product));
+    const list = catalogList(ctv ? ctv.catalog : null).filter((p) => p.active || (editing && p.code === a.form.product));
     const groups = {};
     list.forEach((p) => { (groups[p.provider] = groups[p.provider] || []).push(p); });
     const opts = Object.entries(groups).map(([prov, ps]) => `<optgroup label="${h(prov)}" data-cat="${h(ps[0].category)}">${ps.map((p) => `<option value="${h(p.code)}" data-cat="${h(p.category)}" data-op="${p.has_op ? 1 : 0}" data-meigi="${h(allowedMeigi(p).join(','))}" data-ngvn="${p.ng_vn ? 1 : 0}" data-cond="${h(p.conditions || '')}"${d.product === p.code ? ' selected' : ''}>${h(p.provider)} · ${h(p.meigi)} · ${h(p.plan)}</option>`).join('')}</optgroup>`).join('');
@@ -1728,8 +1883,13 @@ const V = {
       if (type === 'select') return `<label class="field"><span>${h(jp)}<small>${h(vi)}</small></span><select name="${fn}">${ol.map(([ov, l]) => `<option value="${h(ov)}"${v === ov ? ' selected' : ''}>${h(l)}</option>`).join('')}</select></label>`;
       return `<label class="field"><span>${h(jp)}<small>${h(vi)}</small></span><input name="${fn}" type="${type === 'date' ? 'date' : 'text'}" value="${h(v)}"></label>`;
     }).join('');
-    return `<div class="head"><h1>${editing ? `申込修正<small>Sửa đơn ${h(a.state.app_no)}</small>` : '新規申込<small>Đăng ký mới</small>'}</h1><a class="btn" href="${editing ? `#/apps/${h(a.owner)}/${h(a.id)}` : '#/'}">← 戻る / Quay lại</a></div>
-      <form class="card form apply" id="applyform" data-action="${editing ? 'editApp' : 'apply'}" data-keep ${editing ? `data-owner="${h(a.owner)}" data-id="${h(a.id)}"` : ''} novalidate>
+    const ctvBox = ctv ? `<h2>0. 送信者（CTV）<small>Người gửi đơn</small></h2><div class="grid">
+          <label class="field"><span>お名前 <em>*</em><small>Tên của bạn (CTV)</small></span><input name="ctv_name" value="${h(d.ctv_name || '')}" maxlength="60" autocomplete="name"></label>
+          <label class="field"><span>電話番号<small>SĐT của bạn (không bắt buộc)</small></span><input name="ctv_phone" value="${h(d.ctv_phone || '')}" maxlength="30" inputmode="tel" autocomplete="tel"></label></div>
+        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">` : '';
+    return `${ctv ? '' : `<div class="head"><h1>${editing ? `申込修正<small>Sửa đơn ${h(a.state.app_no)}</small>` : '新規申込<small>Đăng ký mới</small>'}</h1><a class="btn" href="${editing ? `#/apps/${h(a.owner)}/${h(a.id)}` : '#/'}">← 戻る / Quay lại</a></div>`}
+      <form class="card form apply" id="applyform" data-action="${ctv ? 'ctvApply' : editing ? 'editApp' : 'apply'}" data-keep ${editing ? `data-owner="${h(a.owner)}" data-id="${h(a.id)}"` : ''} novalidate>
+        ${ctvBox}
         ${admin && !editing ? `<h2>担当者<small>Đơn này tính cho ai</small></h2><label class="field"><span>担当者 <em>*</em><small>Nhân viên / đối tác được tính hoa hồng</small></span><select name="owner_id" required><option value="">— 選択 / Chọn —</option>${ownerChoices().map((o) => `<option value="${h(o.id)}"${d.owner_id === o.id ? ' selected' : ''}>${h(o.name)} (${h((ROLE[o.role] || {}).jp)})</option>`).join('')}</select></label>` : ''}
         <h2>1. 種別<small>Loại dịch vụ</small></h2>
         <div class="radios big cats">${Object.entries(CATEGORIES).map(([k, c]) => `<label><input type="radio" name="category" value="${k}"${cat === k ? ' checked' : ''}><span class="ico">${c.icon}</span> ${h(c.jp)}<small>${h(c.vi)}</small></label>`).join('')}</div>
@@ -1769,7 +1929,9 @@ const V = {
     const f = a.form;
     const cat = S.catalog[f.product] || {};
     const canEdit = !trashed && (admin || s.status === 'received' || s.status === 'incomplete');
-    const rows = [['申込番号', 'Mã đơn', `<b>${h(s.app_no)}</b>`], ['種別', 'Loại', catBadge(f.category)], ['商材', 'Gói', h(f.product_label)]];
+    const rows = [['申込番号', 'Mã đơn', `<b>${h(s.app_no)}</b>`]];
+    if (a.ctv) rows.push(['CTV経由', 'Đơn qua link CTV', `<span class="badge st-partner">CTV</span> ${h(a.ctv.name)}${a.ctv.phone ? `<small>${h(a.ctv.phone)}</small>` : ''}`]);
+    rows.push(['種別', 'Loại', catBadge(f.category)], ['商材', 'Gói', h(f.product_label)]);
     if (f.op_taken === true || f.op_taken === false) rows.push(['レ点OP', 'Gói OP', f.op_taken ? '加入 / Có' : '加入なし / Không']);
     if (f.not_vn) rows.push(['国籍確認', 'Quốc tịch', 'ベトナム国籍ではないことを確認済 / Đã xác nhận KH không phải người Việt Nam']);
     rows.push(['名義', 'Danh nghĩa', h(meigiLabel(f.meigi_type))], ['契約者名', 'Tên KH', h(f.cust_name) + (f.cust_kana ? `<small>${h(f.cust_kana)}</small>` : '')]);
@@ -1849,6 +2011,7 @@ const V = {
     for (let i = 0; i < 6; i++) { const m = prevMonth(month, i); const t = totalsOf(linesForMonth(apps, m)); hist.push(`<tr><td><a href="#/rewards?month=${m}">${m}</a></td><td class="num">${t.count}</td><td class="num">${h(yen(t.total))}</td></tr>`); }
     return `<div class="head"><h1>報酬<small>Hoa hồng của tôi — ${h(month)}</small></h1>${monthNav('/rewards', month)}</div>
       ${totalsTiles(totalsOf(lines))}${rewardLines(lines)}
+      ${isPartner() ? V.myRatesCard() : ''}
       <div class="cols"><div class="card"><h2>計算ルール<small>Cách tính</small></h2><ul class="checks">
         <li>報酬は開通・供給開始の月に計上されます<small>Hoa hồng tính vào tháng mở mạng / bắt đầu cấp điện-gas</small></li>
         <li>ストックは契約が続く限り毎月計上<small>Stock được cộng mỗi tháng khi hợp đồng còn hiệu lực</small></li>
@@ -1994,6 +2157,9 @@ const V = {
         <div class="actions"><button class="btn primary">${me.role !== 'kanri' ? '保存してNASONに反映 / Lưu & báo NASON' : '保存 / Lưu'}</button></div></form>
       <div><div class="card"><h2>ログイン情報<small>Đăng nhập</small></h2><table class="detail"><tr><th>権限<small>Quyền</small></th><td>${roleBadge(me)}</td></tr></table>
       </div>
+      ${me.role === 'partner' ? V.myRatesCard() : ''}
+      ${me.role !== 'kanri' ? V.ctvCard() : ''}
+      ${me.is_owner ? V.recoveryCard() : ''}
       <form class="card form" data-action="password" data-keep id="pwForm"><h2>パスワードの設定・変更<small>Đặt / đổi mật khẩu</small></h2>
         <input type="text" name="username" value="${h(S.auth.email)}" autocomplete="username" hidden>
         <label class="field"><span>現在のパスワード<small>Mật khẩu hiện tại</small></span><input name="current" type="password" required autocomplete="current-password"></label>
@@ -2028,8 +2194,8 @@ const V = {
     const bank = (u) => { if (u.role === 'kanri') return '<span class="hint">—</span>'; const m = bankMissing(u.bank); return !m.length ? '<small class="bank">✓ 登録済 / Đã có</small>' : (m.length === 4 ? '<small class="bank none">未登録 / Chưa có</small>' : `<small class="bank none">⚠ 一部未入力 / Thiếu: ${h(m.map((x) => x.split(' / ')[0]).join('、'))}</small>`); };
     let table;
     if (tab === 'active') {
-      table = `<div class="tablewrap"><table class="list" id="acctActive"><thead><tr><th>表示名<small>Tên / Công ty</small></th><th>メール<small>Email đăng nhập</small></th><th>権限<small>Quyền</small></th><th>状態<small>Trạng thái</small></th><th class="num">申込数<small>Số đơn</small></th><th>振込先<small>TK nhận HH</small></th></tr></thead>
-        <tbody>${act.map((u) => `<tr data-href="#/admin/accounts/${h(u.id)}"><td><b>${h(u.name)}</b>${u.company ? `<small>${h(u.company)}</small>` : ''}</td><td>${h(u.email)}</td><td>${roleBadge(u)}</td>
+      table = `<div class="tablewrap"><table class="list" id="acctActive"><thead><tr><th>表示名<small>Tên / Công ty</small></th><th>メール<small>Email đăng nhập</small></th><th>パスワード<small>Mật khẩu</small></th><th>権限<small>Quyền</small></th><th>状態<small>Trạng thái</small></th><th class="num">申込数<small>Số đơn</small></th><th>振込先<small>TK nhận HH</small></th></tr></thead>
+        <tbody>${act.map((u) => `<tr data-href="#/admin/accounts/${h(u.id)}"><td><b>${h(u.name)}</b>${u.company ? `<small>${h(u.company)}</small>` : ''}</td><td>${h(u.email)}</td><td class="pwtd">${pwCell(u)}</td><td>${roleBadge(u)}</td>
           <td><span class="badge st-done">有効<small>Đang dùng</small></span></td>
           <td class="num">${counts[u.id] || 0}</td><td>${bank(u)}</td></tr>`).join('')}</tbody></table></div>`;
     } else {
@@ -2091,6 +2257,104 @@ const V = {
   },
 
   // Link đăng nhập riêng cho 1 tài khoản (quản trị gửi cho đối tác / nhân viên): link sạch + email điền sẵn, kiểm tra link sống, copy / mở thử / chia sẻ / email
+  // Trang công khai cho CTV (không đăng nhập): link do đối tác tạo. Mọi dữ liệu đọc/ghi đi qua B.pub (auth = null) và bị Rules v4 giới hạn.
+  ctv(r) {
+    let c = S.ctvPage;
+    if (!c || c.owner !== r.owner || c.token !== r.token) {
+      c = S.ctvPage = { owner: r.owner, token: r.token, state: 'loading', catalog: {}, link: null, done: null, err: '' };
+      if (!CTV_TOKEN_RE.test(r.token) || !/^[A-Za-z0-9_-]{6,64}$/.test(r.owner)) c.state = 'invalid';
+      else setTimeout(() => loadCtvPage(c), 0);
+    }
+    const msg = (jp, vi, extra) => `<div class="card narrow center-card"><h1>${h(jp)}<small>${h(vi)}</small></h1>${extra || ''}</div>`;
+    if (c.state === 'loading') return '<div class="empty">読み込み中… / Đang tải…</div>';
+    if (c.state === 'invalid') return msg('このリンクは無効です', 'Link không hợp lệ', '<p>URLが正しいかご確認ください。取次店にお問い合わせください。<br>Hãy kiểm tra lại đường link hoặc hỏi người gửi link cho bạn.</p>');
+    if (c.state === 'closed') return msg('このリンクは停止されています', 'Link này đã bị tắt', '<p>取次店に新しいリンクをお問い合わせください。<br>Hãy xin người gửi link một đường link mới.</p>');
+    if (c.state === 'error') return msg('読み込みできませんでした', 'Không tải được', `<p class="pre">${h(c.err)}</p><div class="actions"><button type="button" class="btn primary" data-act="ctvReload">再読み込み / Thử lại</button></div>`);
+    if (c.done) {
+      return `<div class="card narrow center-card ctvok" id="ctvDone"><h1>✅ 申込を受け付けました<small>Đã nhận đơn đăng ký</small></h1>
+        <p>申込番号 / Mã đơn：<b>${h(c.done.app_no)}</b></p>
+        <p>${h(c.link.name)} が内容を確認します。<br><small>${h(c.link.name)} sẽ kiểm tra và xử lý đơn này.</small></p>
+        <div class="actions"><button type="button" class="btn primary" data-act="ctvAgain">続けて入力 / Nhập đơn khác</button></div></div>`;
+    }
+    return `<div class="card ctvhead" id="ctvHead"><h1>新規申込フォーム<small>Đăng ký mới — dành cho CTV của ${h(c.link.name)}</small></h1>
+        <p class="hint">取次店：<b>${h(c.link.name)}</b>　（ログイン不要 / Không cần đăng nhập）<br>お客様の情報を入力して送信してください。送信した内容は取次店とNASON HOMEが確認します。<br>Điền thông tin khách hàng rồi gửi. Đơn sẽ chuyển thẳng cho ${h(c.link.name)} và NASON HOME xử lý.</p></div>${V.apply(null, r, c)}`;
+  },
+  // Khung "link CTV" của đối tác / nhân viên (trang アカウント)
+  ctvCard() {
+    const me = uid();
+    const links = Object.entries(S.ctvLinks || {}).map(([token, v]) => ({ token, ...(v || {}) })).sort((a, b) => (b.at || 0) - (a.at || 0));
+    const cur = links.find((l) => l.on === true) || links[0] || null;
+    const count = (tok) => appList().filter((a) => a.ctv && a.ctv.token === tok).length;
+    const head = '<h2>🔗 CTV用 申込リンク<small>Link nhập đơn cho CTV — không cần đăng nhập</small></h2>';
+    const intro = '<p class="hint">このリンクをCTV（協力者）に送ると、CTVがログインなしで<b>新規申込</b>を入力できます。入力された申込は<b>あなたの申込一覧</b>に入ります。<br>Gửi link này cho CTV của anh/chị: CTV mở ra là điền được form <b>新規申込 (Đăng ký mới)</b> mà <b>không cần đăng nhập</b>. Đơn CTV gửi sẽ vào <b>danh sách đơn của anh/chị</b>.</p>';
+    if (S.subErr.ctvLinks) return `<div class="card" id="ctvCard">${head}<div class="flash error">⚠ 現在この機能を使えません（Firebase の Rules が古い可能性）。NASON にご連絡ください。<br><small>Chưa dùng được tính năng này (Rules Firebase có thể chưa cập nhật) — nhắn NASON để cập nhật. (${h(S.subErr.ctvLinks)})</small></div></div>`;
+    if (!cur) return `<div class="card" id="ctvCard">${head}${intro}<div class="actions"><button type="button" class="btn primary" data-act="ctvCreate" id="ctvCreate">🔗 リンクを作成 / Tạo link CTV</button></div></div>`;
+    const url = ctvLinkFor(me, cur.token);
+    const on = cur.on === true;
+    const msg = ['【' + (S.me.name || '') + '】新規申込フォーム / Form đăng ký mới', '', '下のリンクを開いて、お客様の情報を入力してください（ログイン不要）。', 'Mở link bên dưới và điền thông tin khách hàng (không cần đăng nhập):', url].join('\n');
+    const share = typeof navigator !== 'undefined' && navigator.share ? '<button type="button" class="btn small" data-act="ctvShare" id="ctvShare">📤 共有 / Chia sẻ<small>Zalo · LINE · Mail…</small></button>' : '';
+    const n = count(cur.token);
+    const oldN = links.filter((l) => l.token !== cur.token).length;
+    return `<div class="card" id="ctvCard">${head}${intro}
+      <p class="ctvstate">${on ? '<span class="badge st-done">● 有効<small>Đang bật</small></span>' : '<span class="badge st-cancelled">● 停止中<small>Đang tắt — CTV không gửi được</small></span>'} <span class="hint">受信 ${n} 件 / Đã nhận ${n} đơn qua link này</span></p>
+      <div class="copyrow full"><input readonly id="ctvlink" value="${h(url)}" class="mono" aria-label="CTV link" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
+      <div class="btns linkbtns"><button type="button" class="btn small primary" data-copy-from="ctvlink" id="ctvCopy">📋 コピー / Copy link</button><a class="btn small" id="ctvOpen" href="${h(url)}" target="_blank" rel="noopener noreferrer">🔗 開く / Mở thử</a>${share}</div>
+      <details class="vaultmsg"><summary>📨 そのまま送れるメッセージ<small>Tin nhắn gửi sẵn cho CTV</small></summary><textarea readonly id="ctvmsg" rows="6" class="msgbox">${h(msg)}</textarea>
+        <div class="copyrow"><button type="button" class="btn small primary" data-copy-from="ctvmsg">📋 メッセージをコピー / Copy tin nhắn</button></div></details>
+      <div class="btns linkbtns"><button type="button" class="btn small" data-act="ctvToggle" data-owner="${h(me)}" data-token="${h(cur.token)}" data-on="${on ? '0' : '1'}" id="ctvToggle">${on ? '⏸ 停止する / Tắt link' : '▶ 再開する / Bật lại'}</button>
+        <button type="button" class="btn small" data-act="ctvCreate" id="ctvRegen" data-confirm2>🔄 再発行 / Tạo link mới<small>Link cũ ngừng ngay</small></button></div>
+      <p class="hint">リンクを知っている人は誰でも申込を送信できます。漏れた・不要になったときは「停止」または「再発行」してください。${oldN ? `（過去のリンク ${oldN} 件は停止済み）` : ''}<br>Ai có link đều gửi được đơn. Nếu link bị lộ hoặc không dùng nữa → bấm <b>Tắt link</b> hoặc <b>Tạo link mới</b> (link cũ ngừng ngay).</p></div>`;
+  },
+  // Tài khoản tổng: mã khôi phục (quên MK mà không cần email). Mã chỉ hiện 1 lần ngay sau khi tạo.
+  recoveryCard() {
+    const rec = S.recovery || {};
+    const has = !!rec.pub;
+    const head = '<h2>🛟 復旧コード<small>Mã khôi phục — dùng khi quên MK tài khoản tổng (không cần email)</small></h2>';
+    if (S.recCode) {
+      return `<div class="card" id="recCard">${head}
+        <div class="flash warn">⚠ このコードは<b>今だけ</b>表示されます。メモ・写真で控え、安全な場所に保管してください（チャット等で送らないこと）。<br><small>Mã chỉ hiện <b>1 lần</b> — ghi lại / chụp lại và cất kỹ. Không gửi qua chat / LINE.</small></div>
+        <div class="copyrow full"><input readonly id="reccode" class="mono reccode" value="${h(fmtRecCode(S.recCode))}" aria-label="recovery code"></div>
+        <div class="btns linkbtns"><button type="button" class="btn small" data-copy-from="reccode">📋 コピー / Copy</button><button type="button" class="btn small primary" data-act="recDone" id="recDone">✓ 控えました / Đã cất mã</button></div>
+        <p class="hint">パスワードを忘れたら：ログイン画面 →「パスワードを忘れた」→ メール + このコード + 新しいパスワード。<br>Quên MK: trang đăng nhập → 「パスワードを忘れた」 → nhập email + mã này + MK mới → vào lại ngay.</p></div>`;
+    }
+    return `<form class="card form" id="recCard" data-action="recSetup" data-keep autocomplete="off">${head}
+      ${S.recWarn ? `<div class="flash error" id="recWarn">⚠ 復旧コードのデータが別の端末・別の人によって変更されました。ご自身で作り直した場合は「確認」を、心当たりがない場合はコードを作り直してください。<br><small>Dữ liệu mã khôi phục vừa bị thay đổi ở nơi khác. Nếu chính anh vừa tạo lại ở máy khác → bấm Xác nhận; nếu không → tạo lại mã ngay.</small><div class="btns"><button type="button" class="btn small" data-act="recTrust">確認 / Chính tôi tạo</button></div></div>` : ''}
+      <p id="recStatus">${has ? `✅ 設定済（${h(fmtTime(rec.setup_at))}）· 最新パスワードと同期 ${h(fmtTime(rec.at))}<br><small>Đã có mã — tự cập nhật theo MK mới mỗi lần anh đăng nhập / đổi MK.</small>` : '<span class="warn">⚠ 未設定 — パスワードを忘れると再設定できません。今すぐ作成してください。</span><br><small>Chưa có mã khôi phục — nên tạo ngay.</small>'}</p>
+      <input type="text" name="username" value="${h(S.auth ? S.auth.email : '')}" autocomplete="username" hidden>
+      <label class="field"><span>現在のパスワード<small>Mật khẩu hiện tại (để xác nhận)</small></span><input name="current" type="password" required autocomplete="current-password"></label>
+      ${has ? '<p class="hint">作り直すと古いコードは使えなくなります。<br>Tạo lại thì mã cũ hết hiệu lực.</p>' : ''}
+      <div class="actions"><button class="btn primary">${has ? '🔄 コードを作り直す / Tạo lại mã' : '🛟 コードを作成 / Tạo mã khôi phục'}</button></div></form>`;
+  },
+  // Quản trị: nhập tay hoa hồng (¥ / 1 đơn) cho 1 đối tác — chỉ lưu + hiện cho đối tác, không đổi cách tính tiền
+  ratesCard(id, u) {
+    const r = u.rates || {};
+    return `<form class="card form" id="ratesCard" data-action="ratesSave" data-keep data-id="${h(id)}" autocomplete="off" novalidate><h2>💴 報酬単価<small>Hoa hồng của ${h(u.name)} — ¥ / 1 đơn</small></h2>
+      <div class="grid">${RATE_CATS.map((k) => `<label class="field"><span>${CATEGORIES[k].icon} ${h(CATEGORIES[k].jp)}<small>${h(CATEGORIES[k].vi)}</small></span><div class="yenin"><input name="rate_${k}" value="${r[k] != null ? h(String(r[k])) : ''}" inputmode="numeric" maxlength="14" placeholder="例 7000"><span>円</span></div></label>`).join('')}</div>
+      <p class="hint">${r.at ? `最終更新 ${h(fmtTime(r.at))}${r.by ? ' · ' + h(userName(r.by)) : ''}<br>` : ''}保存するとパートナーの「アカウント」「報酬」画面にすぐ表示されます。空欄＝未設定。<br>Lưu xong đối tác thấy ngay ở trang アカウント và 報酬. Để trống = chưa thiết lập.</p>
+      <div class="actions"><button class="btn primary">💾 保存 / Lưu hoa hồng</button></div></form>`;
+  },
+  // Đối tác: xem hoa hồng NASON đã đặt cho mình (trang アカウント + 報酬)
+  myRatesCard() {
+    const r = (S.me && S.me.rates) || {};
+    return `<div class="card" id="myRates"><h2>💴 報酬単価<small>Hoa hồng mỗi đơn của bạn</small></h2>
+      <table class="detail">${RATE_CATS.map((k) => `<tr data-rate="${k}"><th>${CATEGORIES[k].icon} ${h(CATEGORIES[k].jp)}<small>${h(CATEGORIES[k].vi)}</small></th><td>${r[k] != null ? `<b>${h(yen(r[k]))}</b> <small>/ 件 · mỗi đơn</small>` : '<span class="hint">未設定 / Chưa thiết lập</span>'}</td></tr>`).join('')}</table>
+      <p class="hint">${r.at ? `更新 ${h(fmtTime(r.at))}<br>` : ''}NASONが設定します。ご不明点はチャットでお問い合わせください。<br>Do NASON thiết lập — có thắc mắc vui lòng nhắn trong mục チャット.</p></div>`;
+  },
+  // Quản trị: xem / tắt / bật link CTV của 1 đối tác
+  ctvAdminCard(id, u) {
+    const links = Object.entries((S.ctvAll || {})[id] || {}).map(([token, v]) => ({ token, ...(v || {}) })).sort((a, b) => (b.at || 0) - (a.at || 0));
+    const rows = links.map((l) => {
+      const n = appList().filter((a) => a.owner === id && a.ctv && a.ctv.token === l.token).length;
+      const on = l.on === true;
+      return `<tr><td>${on ? '<span class="badge st-done">● 有効<small>Bật</small></span>' : '<span class="badge st-cancelled">● 停止<small>Tắt</small></span>'}</td><td class="mono">${h(l.token.slice(0, 6))}…</td><td>${h(l.at ? fmtTime(l.at) : '—')}</td><td class="num">${n}</td>
+        <td class="num"><button type="button" class="btn small" data-act="ctvToggle" data-owner="${h(id)}" data-token="${h(l.token)}" data-on="${on ? '0' : '1'}">${on ? '停止 / Tắt' : '再開 / Bật'}</button></td></tr>`;
+    }).join('');
+    return `<div class="card" id="ctvAdminCard"><h2>🔗 CTVリンク<small>Link CTV của ${h(u.name)}</small></h2>${rows
+      ? `<table class="list"><thead><tr><th>状態<small>Trạng thái</small></th><th>コード<small>Mã</small></th><th>作成<small>Tạo lúc</small></th><th class="num">受信<small>Số đơn</small></th><th></th></tr></thead><tbody>${rows}</tbody></table>
+         <p class="hint">停止するとCTVは新しい申込を送れなくなります（受付済みの申込は残ります）。<br>Tắt link → CTV không gửi đơn mới được nữa (đơn đã nhận vẫn giữ).</p>`
+      : '<p class="hint">リンク未作成 / Đối tác chưa tạo link CTV.</p>'}</div>`;
+  },
+
   loginLinkCard(id, u) {
     const url = loginLinkFor(u.email);
     const base = loginUrl();
@@ -2152,10 +2416,9 @@ const V = {
         <tr><th>作成<small>Tạo lúc</small></th><td>${h(fmtTime(u.created_at))}</td></tr></table>
         <div class="actions stack">
           ${u.role !== 'kanri' ? `<a class="btn" href="#/chat/dm/${h(id)}">💬 チャット<small>Nhắn tin với người này</small></a>` : ''}
-          ${!self && !u.is_owner ? `<button class="btn" data-act="accountReset" data-id="${h(id)}" data-confirm2>🔑 パスワード再設定メール<small>Gửi email đặt lại mật khẩu tới ${h(u.email)}</small></button>` : ''}
           ${!self && !u.is_owner ? `<button class="btn" data-act="accountToggle" data-id="${h(id)}" data-confirm2>${u.active ? '⛔ 停止してアーカイブへ<small>Khoá tài khoản → chuyển vào Lưu trữ (mất quyền truy cập ngay)</small>' : '✅ 再開（アーカイブから復元）<small>Khôi phục — quay lại danh sách đang dùng</small>'}</button>` : ''}
           ${self ? '<a class="btn" href="#/account/password">🔑 自分のパスワード変更<small>Đổi mật khẩu của tôi</small></a>' : ''}
-        </div></div>${u.role !== 'kanri' && u.active !== false && !self && !u.is_owner ? V.loginLinkCard(id, u) : ''}${vaultOk(id, u) ? `<div class="card" id="vaultCard"><h2>🔑 保管パスワード<small>Mật khẩu đang lưu — chỉ quản trị thấy</small></h2><div id="vaultBox" data-id="${h(id)}">${vaultBox(id)}</div></div>` : ''}${vaultOk(id, u) && u.active !== false ? V.pwSetCard(id) : ''}</div></div>`;
+        </div></div>${u.role === 'partner' ? V.ratesCard(id, u) : ''}${u.role !== 'kanri' && u.active !== false && !self && !u.is_owner ? V.loginLinkCard(id, u) : ''}${u.role !== 'kanri' && !u.is_owner ? V.ctvAdminCard(id, u) : ''}${vaultOk(id, u) ? `<div class="card" id="vaultCard"><h2>🔑 保管パスワード<small>Mật khẩu đang lưu — chỉ quản trị thấy</small></h2><div id="vaultBox" data-id="${h(id)}">${vaultBox(id)}</div></div>` : ''}${vaultOk(id, u) && u.active !== false ? V.pwSetCard(id) : ''}</div></div>`;
   },
 
   // ---------- Hợp đồng (đối tác) ----------
@@ -2370,7 +2633,195 @@ function rewardUpdates(a, status, startedAt, cancelledAt, ov) {
   };
 }
 
+// ---- Đặt MK mới trong hệ thống (không email) — dùng chung cho thẻ 🔐 パスワード設定 và nút 🔐 再設定 ở danh sách ----
+// Trả '' khi xong (đã chuyển sang màn hình kết quả có MK mới + tin nhắn gửi), hoặc câu báo lỗi.
+async function pwSetCore(id, typed) {
+  const u = S.users[id];
+  if (!vaultOk(id, u) || u.active === false) return 'このアカウントには設定できません / Không đặt được cho tài khoản này';
+  let cur = '';
+  try { const v = await B.get(`${P.pwvault}/${id}`); cur = v && typeof v.pw === 'string' ? v.pw : ''; } catch (e) { return errText(e); }
+  if (!cur) return '保管されたパスワードがないため、システム上では再設定できません（本人が一度ログインすると保管されます）。/ Chưa có MK nào được lưu cho tài khoản này nên chưa đặt lại được — khi người này đăng nhập 1 lần, hệ thống sẽ tự lưu.';
+  const next = typed || tempPassword();
+  if (next === cur) return '今のパスワードと同じです。別のパスワードにしてください / Trùng với MK hiện tại — hãy chọn MK khác';
+  try { await B.setUserPassword(u.email, cur, next); } catch (e) {
+    return /wrong-password|invalid-credential|INVALID_LOGIN|user-not-found/i.test(errCode(e))
+      ? '保管されているパスワードが実際のパスワードと一致しません（本人がシステム外で変更した可能性）。本人が新しいパスワードで一度ログインすると自動で一致します。/ MK đang lưu không khớp MK thật (người dùng đã đổi MK ngoài hệ thống). Khi họ đăng nhập 1 lần bằng MK mới, kho sẽ tự khớp lại.'
+      : errText(e);
+  }
+  // Đã đổi MK thật → ghi kho + nhật ký. Lỗi ở bước này không được làm mất MK mới: vẫn hiện màn hình kết quả kèm cảnh báo.
+  let warn = '';
+  try { await B.update({ [`${P.pwvault}/${id}`]: { pw: next, at: B.TS, by: uid() }, ...audit('account_pw_set', u.email, typed ? 'manual' : 'auto') }); } catch (e) { warn = errText(e); }
+  S.tempCard = { email: u.email, name: u.name, pw: next, role: u.role, reset: true, id, typed: !!typed };
+  if (warn) setFlash('error', 'パスワードは変更済みですが、記録の保存に失敗しました / Đã đổi MK nhưng chưa ghi được vào kho / nhật ký: ' + warn);
+  go('#/admin/accounts/created');
+  return '';
+}
+
+// ---- Mã khôi phục tài khoản tổng (f17) ----
+// Vân tay khoá công khai lưu ở trình duyệt của chủ tài khoản: nếu dữ liệu trên Firebase bị người khác tráo khoá → KHÔNG mã hoá MK bằng khoá lạ, báo chủ tài khoản.
+const REC_LS = 'dgw_rec_fp';
+function recLocalGet() { try { return localStorage.getItem(REC_LS) || ''; } catch (_) { return ''; } }
+function recLocalSet(fp) { try { if (fp) localStorage.setItem(REC_LS, fp); else localStorage.removeItem(REC_LS); } catch (_) { /* bỏ qua */ } }
+// Tài khoản tổng vừa đăng nhập / đổi MK / khôi phục → mã hoá MK mới bằng khoá công khai (không cần mã khôi phục), để mã khôi phục luôn dùng được
+async function syncRecovery(pw) {
+  if (!pw || !S.me || !S.me.is_owner) return;
+  const recovered = S.recovered; S.recovered = false;
+  try {
+    const rec = await B.get(P.recovery);
+    if (!rec || !rec.pub) { if (recovered) B.update(audit('owner_recover', S.me.email)).catch(() => {}); return; }
+    const fp = await recFingerprint(rec.pub);
+    const local = recLocalGet();
+    if (local && local !== fp) { S.recWarn = true; scheduleRender(); return; }
+    if (!local) recLocalSet(fp);
+    const ctpw = await recEncryptPw(rec.pub, pw);
+    await B.update({ [`${P.recovery}/ctpw`]: ctpw, [`${P.recovery}/at`]: B.TS, ...(recovered ? audit('owner_recover', S.me.email) : {}) });
+  } catch (e) { console.warn('[dgw] recovery sync', e); }
+}
+function recErrText(e) {
+  const c = errCode(e);
+  if (/rec_bad_code/.test(c)) return '復旧コードが違います / Mã khôi phục không đúng';
+  if (/rec_none/.test(c)) return '復旧コードが設定されていません。NASON の技術担当にご連絡ください / Tài khoản tổng chưa tạo mã khôi phục';
+  if (/rec_pw_too_long/.test(c)) return 'パスワードが長すぎます（全角なら短めに）/ Mật khẩu quá dài';
+  if (/crypto_unavailable/.test(c)) return 'このブラウザでは使えません。最新の Safari / Chrome で開いてください / Trình duyệt không hỗ trợ — mở bằng Safari / Chrome mới';
+  if (/wrong-password|invalid-credential|INVALID_LOGIN|user-not-found|invalid-email/i.test(c)) return 'メールが違うか、パスワードがシステム外で変更されています / Email không đúng (hoặc MK đã bị đổi ngoài hệ thống)';
+  return errText(e);
+}
+
+// ---- Trang link CTV (không đăng nhập) ----
+// Đọc: đúng 1 nút link theo mã + danh mục gói. Ghi: tạo mới 1 đơn (xem ACTIONS.ctvApply). Tất cả đi qua B.pub (auth = null).
+// Mạng chập chờn: không để trang CTV treo mãi ở "Đang tải…" (Firebase chờ kết nối vô hạn). window.__DGW_CTV_MS__ chỉ để test rút ngắn thời gian chờ.
+function withTimeout(p, ms, code) {
+  return new Promise((res, rej) => {
+    const t = setTimeout(() => rej(Object.assign(new Error(code), { code })), ms);
+    p.then((v) => { clearTimeout(t); res(v); }, (e) => { clearTimeout(t); rej(e); });
+  });
+}
+const ctvMs = (def) => (typeof window !== 'undefined' && window.__DGW_CTV_MS__) || def;
+async function loadCtvPage(c) {
+  try {
+    const link = await withTimeout(B.pub.get(`${P.ctv}/${c.owner}/${c.token}`), ctvMs(15000), 'network_timeout');
+    if (S.ctvPage !== c) return;
+    if (!link || typeof link !== 'object') c.state = 'invalid';
+    else if (link.on !== true) { c.link = link; c.state = 'closed'; }
+    else {
+      const cat = await withTimeout(B.pub.get(P.catalog), ctvMs(15000), 'network_timeout');
+      if (S.ctvPage !== c) return;
+      c.link = link; c.catalog = cat || {}; c.state = 'ok';
+    }
+  } catch (e) {
+    if (S.ctvPage !== c) return;
+    c.state = 'error';
+    c.err = /PERMISSION_DENIED|permission/i.test(errCode(e)) ? 'リンクを確認できません。リンクをくれた方にご連絡ください。 / Chưa xác nhận được link (hệ thống chưa sẵn sàng) — hãy báo người gửi link cho bạn.' : errText(e);
+  }
+  if (S.ctvPage === c && currentRoute().name === 'ctv') render();
+}
+function ctvSendError(e) {
+  if (/send_timeout/.test(errCode(e))) return '通信が遅れています。送信は完了している場合があります。数分待って、リンクをくれた方に届いたかご確認ください（二重送信を防ぐため）。 / Mạng chậm — đơn CÓ THỂ đã gửi được. Đợi 1–2 phút và hỏi người gửi link xem đã nhận chưa rồi hãy gửi lại (tránh gửi trùng).';
+  return /PERMISSION_DENIED|permission/i.test(errCode(e))
+    ? '送信できませんでした。リンクが停止された可能性があります。リンクをくれた方にご確認ください。 / Không gửi được — link có thể vừa bị tắt. Hãy hỏi người gửi link cho bạn.'
+    : errText(e);
+}
+
 const ACTIONS = {
+  // CTV điền 新規申込 qua link (không đăng nhập): TẠO MỚI 1 đơn dưới đối tác chủ link — form + state(受付) + nhãn CTV + lịch sử, ghi 1 lần (Rules v4 kiểm tra mã còn bật)
+  // Tài khoản tổng tạo / tạo lại mã khôi phục (xác nhận bằng MK hiện tại)
+  async recSetup(form, fd) {
+    if (!S.me || !S.me.is_owner) return;
+    const cur = String(fd.get('current') || '');
+    if (!cur) return formErrors(form, '現在のパスワードを入力してください / Nhập mật khẩu hiện tại');
+    busy(form, true);
+    try { await B.verifyPassword(S.auth.email, cur); } catch (e) { busy(form, false); return formErrors(form, /wrong-password|invalid-credential|INVALID_LOGIN/i.test(errCode(e)) ? '現在のパスワードが違います / Mật khẩu hiện tại không đúng' : errText(e)); }
+    try {
+      const { code, rec } = await recCreate(cur);
+      await B.update({ [P.recovery]: { ...rec, at: B.TS, setup_at: B.TS }, ...audit('recovery_setup', S.me.email) });
+      recLocalSet(await recFingerprint(rec.pub));
+      S.recWarn = false;
+      S.recCode = code; // chỉ giữ trong bộ nhớ, rời trang là xoá
+      S.dirty = false;
+      render();
+    } catch (e) { busy(form, false); formErrors(form, recErrText(e)); }
+  },
+  // Quên MK tài khoản tổng: email + mã khôi phục + MK mới → đặt lại và đăng nhập luôn (không email)
+  async recover(form, fd) {
+    const email = clean(fd.get('email'), 120);
+    const code = normRecCode(fd.get('code'));
+    const pw = String(fd.get('password') || '');
+    const errs = [];
+    if (!email) errs.push('メールを入力してください / Nhập email');
+    if (code.length !== 12) errs.push('復旧コードは12文字です / Mã khôi phục gồm 12 ký tự');
+    if (pw.length < 6) errs.push('パスワードは6文字以上 / Mật khẩu tối thiểu 6 ký tự');
+    if (pw.length > 64) errs.push('パスワードは64文字以内 / Mật khẩu tối đa 64 ký tự');
+    if (pw !== fd.get('password2')) errs.push('確認用パスワードが一致しません / Hai lần nhập mật khẩu mới không khớp');
+    if (errs.length) return formErrors(form, errs);
+    busy(form, true);
+    try {
+      const rec = await withTimeout(B.pub.get(P.recovery), 15000, 'network_timeout');
+      if (!rec || !rec.epriv) throw Object.assign(new Error('rec_none'), { code: 'rec_none' });
+      const cur = await recDecryptPw(rec, code);
+      if (cur !== pw) await B.setUserPassword(email, cur, pw);
+      S.recovered = true;
+      S.pendingPw = pw; // đăng nhập xong: mã hoá MK mới cho mã khôi phục (syncVault → syncRecovery)
+      await B.signIn(email, pw);
+      setFlash('ok', 'パスワードを再設定しました。復旧コードは引き続き使えます / Đã đặt lại mật khẩu và đăng nhập. Mã khôi phục vẫn dùng tiếp được.');
+      go('#/');
+    } catch (e) { S.recovered = false; S.pendingPw = null; busy(form, false); formErrors(form, recErrText(e)); }
+  },
+  // Quản trị lưu hoa hồng nhập tay cho 1 đối tác → dgw/users/<uid>/rates (đối tác chỉ đọc được của chính mình; không tự sửa được)
+  async ratesSave(form, fd) {
+    if (!isAdmin()) return;
+    const id = form.dataset.id;
+    const u = S.users[id];
+    if (!u) return;
+    const r = {};
+    const errs = [];
+    for (const k of RATE_CATS) {
+      const v = parseRate(fd.get('rate_' + k));
+      if (Number.isNaN(v)) errs.push(`${CATEGORIES[k].jp}：金額は数字で入力してください / ${CATEGORIES[k].vi}: chỉ nhập số tiền (vd 7000)`);
+      else if (v != null) r[k] = v;
+    }
+    if (errs.length) return formErrors(form, errs);
+    busy(form, true);
+    try {
+      const summary = RATE_CATS.map((k) => `${CATEGORIES[k].jp}:${r[k] != null ? r[k] : '—'}`).join(' ');
+      await B.update({ [`${P.users}/${id}/rates`]: Object.keys(r).length ? { ...r, at: B.TS, by: uid() } : null, ...audit('rates_update', u.email, summary) });
+      S.dirty = false;
+      setFlash('ok', `報酬単価を保存しました（${u.name}）。パートナーの画面に即時反映されます / Đã lưu hoa hồng — bên ${u.name} thấy ngay.`);
+      render();
+    } catch (e) { busy(form, false); formErrors(form, errText(e)); }
+  },
+  async ctvApply(form, fd) {
+    const c = S.ctvPage;
+    if (!c || c.state !== 'ok' || c.done) return;
+    if (fd.get('website')) return; // ô bẫy bot: người thật không thấy / không điền
+    const { d, errs } = parseAppForm(fd, catalogList(c.catalog), {});
+    const ctvName = clean(fd.get('ctv_name'), 60);
+    const ctvPhone = clean(fd.get('ctv_phone'), 30);
+    if (!ctvName) errs.unshift('お名前（CTV）を入力してください / Nhập tên của bạn (CTV)');
+    if (ctvPhone && !/^[0-9+\-() ]{8,20}$/.test(ctvPhone)) errs.push('CTVの電話番号が正しくありません / SĐT của CTV không hợp lệ');
+    if (Date.now() - (S.ctvLast || 0) < 8000) errs.push('続けて送信されました。数秒待ってからもう一度お試しください / Vừa gửi xong — đợi vài giây rồi gửi tiếp');
+    if (errs.length) return formErrors(form, errs);
+    busy(form, true);
+    try {
+      const day = today().replace(/-/g, '').slice(2);
+      const appNo = `NH${day}-C${newCtvAppSuffix()}`;
+      const base = `${P.apps}/${c.owner}`;
+      const id = B.pub.newKey(base);
+      const hk = B.pub.newKey(`${base}/${id}/history`);
+      const formData = compact({ category: d.category, product: d.product, product_label: d.product_label, meigi_type: d.meigi_type, cust_name: d.cust_name, cust_kana: d.cust_kana, company_name: d.company_name, birth_date: d.birth_date, phone: d.phone, email: d.email, postal: d.postal, address: d.address, building: d.building, details: d.details, note: d.note, not_vn: d.not_vn || null });
+      if (d.op_taken != null) formData.op_taken = d.op_taken;
+      await withTimeout(B.pub.update({
+        [`${base}/${id}/form`]: formData,
+        [`${base}/${id}/state`]: { status: 'received', owner: c.owner, app_no: appNo, applied_at: today(), updated_at: B.TS },
+        [`${base}/${id}/ctv`]: compact({ token: c.token, name: ctvName, phone: ctvPhone }),
+        [`${base}/${id}/history/${hk}`]: { by: 'ctv', name: 'CTV: ' + ctvName, at: B.TS, to: 'received', comment: '新規申込（CTVリンク） / Đơn mới qua link CTV' },
+      }), ctvMs(25000), 'send_timeout');
+      S.ctvLast = Date.now();
+      S.draft = { ctv_name: ctvName, ctv_phone: ctvPhone }; // đơn kế tiếp: giữ sẵn tên + SĐT của CTV
+      c.done = { app_no: appNo };
+      render();
+      window.scrollTo(0, 0);
+    } catch (e) { if (/send_timeout/.test(errCode(e))) S.ctvLast = Date.now(); busy(form, false); formErrors(form, ctvSendError(e)); }
+  },
   async login(form, fd) {
     const pw = String(fd.get('password') || '');
     S.pendingPw = pw; // → dgw/pwvault khi hồ sơ tải xong (xem syncVault)
@@ -2606,7 +3057,8 @@ const ACTIONS = {
       const updates = audit('password_change', S.me.email);
       if (S.me.must_change_pw) updates[`${P.users}/${uid()}/must_change_pw`] = false;
       await B.update(updates);
-      if (S.me.role !== 'kanri') B.update({ [`${P.pwvault}/${uid()}`]: { pw, at: B.TS, by: uid() } }).catch(() => {}); // kho mật khẩu: lỗi (Rules cũ…) bỏ qua
+      if (S.me.is_owner) syncRecovery(pw); // tài khoản tổng: cập nhật bản mã hoá cho mã khôi phục (không lưu MK rõ)
+      else B.update({ [`${P.pwvault}/${uid()}`]: { pw, at: B.TS, by: uid() } }).catch(() => {}); // kho mật khẩu: lỗi (Rules cũ…) bỏ qua
       S.me.must_change_pw = false;
       setFlash('ok', 'パスワードを変更しました / Đã đổi mật khẩu');
       go('#/');
@@ -2632,7 +3084,7 @@ const ACTIONS = {
     try {
       const newId = await B.createUser(email, pw);
       const updates = { [`${P.users}/${newId}`]: { ...prof, active: true, created_at: B.TS, created_by: uid() }, ...audit('account_create', email, role) };
-      if (role !== 'kanri') updates[`${P.pwvault}/${newId}`] = { pw, at: B.TS, by: uid() }; // kho mật khẩu (chỉ quản trị đọc)
+      updates[`${P.pwvault}/${newId}`] = { pw, at: B.TS, by: uid() }; // kho mật khẩu (chỉ quản trị đọc) — f17: cả quản trị phụ
       const autoIssue = role === 'partner' && !!seal;
       if (autoIssue) Object.assign(updates, issueUpdates(newId, prof, seal));
       await B.update(updates);
@@ -2641,34 +3093,16 @@ const ACTIONS = {
     } catch (e) { busy(form, false); formErrors(form, errText(e)); }
   },
 
-  // Quản trị đặt MK mới cho đối tác / nhân viên: dùng MK đang lưu trong kho để đăng nhập ngầm (app phụ) rồi đổi sang MK mới
+  // Quản trị đặt MK mới cho đối tác / nhân viên (/ quản trị phụ — chỉ tài khoản tổng): dùng MK đang lưu trong kho để đăng nhập ngầm (app phụ) rồi đổi sang MK mới
   async pwSet(form, fd) {
-    const id = form.dataset.id;
-    const u = S.users[id];
-    if (!vaultOk(id, u) || u.active === false) return formErrors(form, 'このアカウントには設定できません / Không đặt được cho tài khoản này');
     const typed = String(fd.get('password') || '').trim();
     const errs = [];
     if (typed && typed.length < 6) errs.push('パスワードは6文字以上（空欄なら自動作成）/ Mật khẩu tối thiểu 6 ký tự (để trống thì hệ thống tự tạo)');
     if (typed.length > 64) errs.push('パスワードは64文字以内 / Mật khẩu tối đa 64 ký tự');
     if (errs.length) return formErrors(form, errs);
     busy(form, true);
-    let cur = '';
-    try { const v = await B.get(`${P.pwvault}/${id}`); cur = v && typeof v.pw === 'string' ? v.pw : ''; } catch (e) { busy(form, false); return formErrors(form, errText(e)); }
-    if (!cur) { busy(form, false); return formErrors(form, '保管されたパスワードがないため設定できません。「パスワード再設定メール」を使うか、本人のログインをお待ちください。/ Chưa có MK nào được lưu cho tài khoản này nên chưa đặt được — dùng 「パスワード再設定メール」 hoặc chờ người dùng đăng nhập (MK sẽ tự được lưu).'); }
-    const next = typed || tempPassword();
-    if (next === cur) { busy(form, false); return formErrors(form, '今のパスワードと同じです。別のパスワードにしてください / Trùng với MK hiện tại — hãy chọn MK khác'); }
-    try { await B.setUserPassword(u.email, cur, next); } catch (e) {
-      busy(form, false);
-      return formErrors(form, /wrong-password|invalid-credential|INVALID_LOGIN|user-not-found/i.test(errCode(e))
-        ? '保管されているパスワードが実際のパスワードと一致しません（本人が変更した／メールで再設定した可能性）。「パスワード再設定メール」をお使いください。/ MK đang lưu không khớp MK thật (người dùng đã đổi MK hoặc đặt lại qua email mà chưa đăng nhập lại). Dùng 「パスワード再設定メール」, hoặc chờ họ đăng nhập rồi thử lại.'
-        : errText(e));
-    }
-    // Đã đổi MK thật → ghi kho + nhật ký. Lỗi ở bước này không được làm mất MK mới: vẫn hiện màn hình kết quả kèm cảnh báo.
-    let warn = '';
-    try { await B.update({ [`${P.pwvault}/${id}`]: { pw: next, at: B.TS, by: uid() }, ...audit('account_pw_set', u.email, typed ? 'manual' : 'auto') }); } catch (e) { warn = errText(e); }
-    S.tempCard = { email: u.email, name: u.name, pw: next, role: u.role, reset: true, id, typed: !!typed };
-    if (warn) setFlash('error', 'パスワードは変更済みですが、記録の保存に失敗しました / Đã đổi MK nhưng chưa ghi được vào kho / nhật ký: ' + warn);
-    go('#/admin/accounts/created');
+    const err = await pwSetCore(form.dataset.id, typed);
+    if (err) { busy(form, false); formErrors(form, err); }
   },
 
   async accountUpdate(form, fd) {
@@ -3003,6 +3437,54 @@ function appsExport(rows) {
 }
 ACTIONS.vaultFilter = (form, fd) => { go('#/admin/contracts' + qs({ tab: 'vault', q: clean(fd.get('q'), 60) })); };
 Object.assign(CLICKS, {
+  // ----- Đặt lại MK ngay ở danh sách tài khoản (MK mới tự tạo) -----
+  async pwQuick(btn) {
+    btn.disabled = true;
+    const err = await pwSetCore(btn.dataset.id, '');
+    if (err) { setFlash('error', err); render(); }
+  },
+  // ----- Mã khôi phục -----
+  recDone() { S.recCode = null; setFlash('ok', '復旧コードを設定しました / Đã tạo mã khôi phục.'); render(); },
+  async recTrust() {
+    try { const rec = S.recovery || {}; if (rec.pub) recLocalSet(await recFingerprint(rec.pub)); } catch (_) { /* bỏ qua */ }
+    S.recWarn = false; render();
+  },
+  // ----- Link CTV -----
+  ctvReload() { const c = S.ctvPage; if (!c) return; S.ctvPage = null; render(); },
+  ctvAgain() { const c = S.ctvPage; if (!c) return; c.done = null; render(); window.scrollTo(0, 0); },
+  // Đối tác tạo link mới (lần đầu) hoặc tạo lại (link đang bật được tắt ngay)
+  async ctvCreate(btn) {
+    if (!S.me || S.me.role === 'kanri') return;
+    btn.disabled = true;
+    try {
+      const me = uid();
+      const token = newCtvToken();
+      const updates = { [`${P.ctv}/${me}/${token}`]: { on: true, name: String(S.me.name || '').slice(0, 60) || 'NASON', at: B.TS } };
+      for (const [t, v] of Object.entries(S.ctvLinks || {})) if (v && v.on === true) updates[`${P.ctv}/${me}/${t}/on`] = false;
+      Object.assign(updates, audit('ctv_link_create', S.me.email || me));
+      await B.update(updates);
+      setFlash('ok', 'CTV用リンクを作成しました / Đã tạo link CTV mới.');
+    } catch (e) { setFlash('error', errText(e)); }
+    render();
+  },
+  // Bật / tắt 1 link (đối tác tự làm với link của mình; quản trị làm được với mọi đối tác)
+  async ctvToggle(btn) {
+    const owner = btn.dataset.owner, token = btn.dataset.token;
+    if (!S.me || !owner || !CTV_TOKEN_RE.test(token || '') || (owner !== uid() && !isAdmin())) return;
+    const on = btn.dataset.on === '1';
+    btn.disabled = true;
+    try {
+      await B.update({ [`${P.ctv}/${owner}/${token}/on`]: on, ...audit(on ? 'ctv_link_on' : 'ctv_link_off', owner === uid() ? (S.me.email || owner) : ((S.users[owner] || {}).email || owner)) });
+      setFlash('ok', on ? 'リンクを再開しました / Đã bật lại link.' : 'リンクを停止しました。CTVは送信できません / Đã tắt link — CTV không gửi đơn được nữa.');
+    } catch (e) { setFlash('error', errText(e)); }
+    render();
+  },
+  async ctvShare() {
+    const links = Object.entries(S.ctvLinks || {}).map(([token, v]) => ({ token, ...(v || {}) })).sort((a, b) => (b.at || 0) - (a.at || 0));
+    const cur = links.find((l) => l.on === true) || links[0];
+    if (!cur || !navigator.share) return;
+    try { await navigator.share({ title: '新規申込フォーム / Form đăng ký mới', text: `【${S.me.name}】新規申込はこちら / Link nhập đơn:`, url: ctvLinkFor(uid(), cur.token) }); } catch (_) { /* huỷ chia sẻ */ }
+  },
   linkRecheck(btn) { btn.disabled = true; checkLoginLink(loginUrl(), true); },
   async linkShare(btn) {
     const u = S.users[btn.dataset.id]; if (!u || !navigator.share) return;
@@ -3374,6 +3856,7 @@ document.addEventListener('keydown', (e) => {
 window.addEventListener('hashchange', () => {
   if (S.flash && S.flash.at) S.flash = null;
   S.dirty = false;
+  S.recCode = null; // mã khôi phục chỉ hiện 1 lần: rời trang là xoá khỏi bộ nhớ
   if (S.tempCard && currentRoute().name !== 'accountCreated') S.tempCard = null; // mật khẩu vừa cấp chỉ hiện 1 lần: rời trang là xoá khỏi bộ nhớ
   render();
   window.scrollTo(0, 0);
